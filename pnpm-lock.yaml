@@ -4,15 +4,13 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-dependencies:
-  '@clack/prompts':
-    specifier: ^0.6.3
-    version: 0.6.3
-
 devDependencies:
   '@bernankez/eslint-config':
     specifier: ^0.7.0
     version: 0.7.0(eslint@8.44.0)(typescript@5.1.6)(vue-eslint-parser@9.3.1)
+  '@clack/prompts':
+    specifier: ^0.6.3
+    version: 0.6.3
   '@types/node':
     specifier: ^20.3.3
     version: 20.3.3
@@ -369,7 +367,7 @@ packages:
     dependencies:
       picocolors: 1.0.0
       sisteransi: 1.0.5
-    dev: false
+    dev: true
 
   /@clack/prompts@0.6.3:
     resolution: {integrity: sha512-AM+kFmAHawpUQv2q9+mcB6jLKxXGjgu/r2EQjEwujgpCdzrST6BJqYw00GRn56/L/Izw5U7ImoLmy00X/r80Pw==}
@@ -377,7 +375,7 @@ packages:
       '@clack/core': 0.3.2
       picocolors: 1.0.0
       sisteransi: 1.0.5
-    dev: false
+    dev: true
     bundledDependencies:
       - is-unicode-supported
 
@@ -3424,6 +3422,7 @@ packages:
 
   /picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
+    dev: true
 
   /picomatch@2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
@@ -3722,6 +3721,7 @@ packages:
 
   /sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
+    dev: true
 
   /slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
