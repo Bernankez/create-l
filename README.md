@@ -1,18 +1,21 @@
-<p align="center">
-  <strong>📦 create-l</strong><br><br>
-  Starter template for TypesScript library with unbuild<br>
-  <samp>extends <a href="https://github.com/antfu/starter-ts" target="_blank">antfu/starter-ts</a></samp>
-</p>
+# create-l
 
-### Getting Started
+A Starter Kit to create library.
 
-- [ ] Change the `name`, `description`, `author`, `homepage`, `repository`, `bugs`, `keywords` in `package.json`
-- [ ] Change the author in `LICENSE`
-- [ ] Set your Actions Secrets via GitHub
-- [ ] Have fun :)
+With NPM:
 
-### Check Also
+```bash
+$ npm create vite@latest
+```
 
-- [VuePureTemplate](https://github.com/Bernankez/VuePureTemplate) - Simple starter template for Vue3
-- [vscode-settings](https://github.com/Bernankez/vscode-settings) - My VSCode Settings
-- [eslint-config](https://github.com/Bernankez/eslint-config) - My ESLint Config
+With Yarn:
+
+```bash
+$ yarn create vite
+```
+
+With PNPM:
+
+```bash
+$ pnpm create vite
+```

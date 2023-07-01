@@ -2,9 +2,12 @@
   "name": "create-l",
   "type": "module",
   "version": "0.0.0",
-  "packageManager": "pnpm@8.3.1",
-  "description": "",
-  "author": "Cole <bernankez@qq.com>",
+  "packageManager": "pnpm@8.6.2",
+  "description": "A Starter Kit to create library",
+  "author": {
+    "name": "Cole",
+    "email": "bernankeic@gmail.com"
+  },
   "license": "MIT",
   "homepage": "https://github.com/bernankez/create-l#readme",
   "repository": {
@@ -12,59 +15,63 @@
     "url": "git+https://github.com/bernankez/create-l.git"
   },
   "bugs": "https://github.com/bernankez/create-l/issues",
-  "keywords": [],
-  "sideEffects": false,
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
-    }
-  },
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./dist/*",
-        "./dist/index.d.ts"
-      ]
-    }
+  "keywords": [
+    "template",
+    "starter",
+    "typescript",
+    "lib"
+  ],
+  "bin": {
+    "create-l": "index.js",
+    "cl": "index.js"
   },
   "files": [
+    "index.js",
     "dist"
   ],
+  "engines": {
+    "node": "^14.18.0 || >=16.0.0"
+  },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "build": "unbuild",
+    "postinstall": "simple-git-hooks",
+    "prepublishOnly": "pnpm build",
     "dev": "unbuild --stub",
-    "prepublishOnly": "npm run build",
-    "release": "bumpp && npm publish --access public",
+    "build": "unbuild",
     "start": "tsx src/index.ts",
+    "watch": "tsx --watch src/index.ts",
+    "release": "bumpp && pnpm publish",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "format": "eslint . --fix",
-    "prepare": "husky install"
+    "fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.6.3"
   },
   "devDependencies": {
-    "@bernankez/eslint-config": "^0.4.3",
-    "@types/node": "^18.16.1",
-    "bumpp": "^9.1.0",
-    "changelogithub": "^0.12.9",
-    "eslint": "^8.39.0",
+    "@bernankez/eslint-config": "^0.7.0",
+    "@types/node": "^20.3.3",
+    "bumpp": "^9.1.1",
+    "eslint": "^8.44.0",
     "husky": "^8.0.3",
-    "lint-staged": "^13.2.2",
-    "rimraf": "^5.0.0",
-    "tsx": "^3.12.6",
-    "typescript": "^5.0.4",
+    "lint-staged": "^13.2.3",
+    "rimraf": "^5.0.1",
+    "simple-git-hooks": "^2.8.1",
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6",
     "unbuild": "^1.2.1",
-    "vite": "^4.3.3",
-    "vitest": "^0.30.1"
+    "vite": "^4.3.9",
+    "vitest": "^0.32.2"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
     "*": "eslint --fix"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

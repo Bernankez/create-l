@@ -1,2 +1,4 @@
-export const one = 1;
-export const two = 2;
+import { intro, outro } from "@clack/prompts";
+
+intro("create-l");
+outro("created successfully!");
