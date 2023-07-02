@@ -2,7 +2,7 @@
   "name": "create-l",
   "type": "module",
   "version": "0.0.0",
-  "packageManager": "pnpm@8.6.2",
+  "packageManager": "pnpm@8.6.5",
   "description": "A Starter Kit to create library",
   "author": {
     "name": "Cole",
