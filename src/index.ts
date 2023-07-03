@@ -1,4 +1,4 @@
-import fs from "fs-extra";
+import { existsSync } from "node:fs";
 import { cancel, confirm, intro, select, text } from "@bernankez/prompt";
 import { getProjectName, isEmpty, isValidPackageName, toValidPackageName } from "./utils";
 
@@ -14,7 +14,7 @@ const projectName = await text({
 });
 // Empty check
 let overwrite = false;
-if (fs.existsSync(projectName) && !isEmpty(projectName)) {
+if (existsSync(projectName) && !isEmpty(projectName)) {
   overwrite = await confirm({
     message: `${projectName === "." ? "Current directory" : `Target directory ${projectName}`} is not empty. Remove existing files and continue?`,
   });

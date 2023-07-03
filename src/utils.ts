@@ -1,12 +1,12 @@
 import path from "node:path";
-import fs from "fs-extra";
+import { readdirSync } from "node:fs";
 
 export function formatTargetDir(targetDir?: string) {
   return targetDir?.trim().replace(/\/+$/g, "");
 }
 
 export function isEmpty(path: string) {
-  const files = fs.readdirSync(path);
+  const files = readdirSync(path);
   return files.length === 0 || (files.length === 1 && files[0] === ".git");
 }
 
