@@ -9,8 +9,8 @@ devDependencies:
     specifier: ^0.7.0
     version: 0.7.0(eslint@8.44.0)(typescript@5.1.6)(vue-eslint-parser@9.3.1)
   '@bernankez/prompt':
-    specifier: ^0.1.1
-    version: 0.1.1
+    specifier: ^0.1.2
+    version: 0.1.2
   '@types/fs-extra':
     specifier: ^11.0.1
     version: 11.0.1
@@ -368,8 +368,8 @@ packages:
       - vue-eslint-parser
     dev: true
 
-  /@bernankez/prompt@0.1.1:
-    resolution: {integrity: sha512-cf/wZNOKxMVzDkR0SJecZVQzjjItmKdvDDbOxQZh/ru5bAY3cS183jTzhq0CcTutrswsRFtqj3MAVTcUcrcXKg==}
+  /@bernankez/prompt@0.1.2:
+    resolution: {integrity: sha512-lBP/Vyz4qMxLV9vmkMpnNxtD+m8pEQE3LexjVsxiPjCRPXKcLN7UonYqbCJd7N9ls84P7sPHZvo6AcPwsyXv/A==}
     requiresBuild: true
     dependencies:
       '@clack/core': 0.3.2
