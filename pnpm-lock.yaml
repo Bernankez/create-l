@@ -8,9 +8,9 @@ devDependencies:
   '@bernankez/eslint-config':
     specifier: ^0.7.0
     version: 0.7.0(eslint@8.44.0)(typescript@5.1.6)(vue-eslint-parser@9.3.1)
-  '@clack/prompts':
-    specifier: 0.6.0
-    version: 0.6.0
+  '@bernankez/prompt':
+    specifier: ^0.1.1
+    version: 0.1.1
   '@types/fs-extra':
     specifier: ^11.0.1
     version: 11.0.1
@@ -368,15 +368,9 @@ packages:
       - vue-eslint-parser
     dev: true
 
-  /@clack/core@0.3.2:
-    resolution: {integrity: sha512-FZnsNynwGDIDktx6PEZK1EuCkFpY4ldEX6VYvfl0dqeoLPb9Jpw1xoUXaVcGR8ExmYNm1w2vdGdJkEUYD/2pqg==}
-    dependencies:
-      picocolors: 1.0.0
-      sisteransi: 1.0.5
-    dev: true
-
-  /@clack/prompts@0.6.0:
-    resolution: {integrity: sha512-lNg3MFPLA2rrMAZ6R2QFg+jGo2Pt3ACJERDbPgxjPU9QJwVFB3D2v3x7SzzVoS6schggcMN0tDJ4zSdcI+kqJg==}
+  /@bernankez/prompt@0.1.1:
+    resolution: {integrity: sha512-cf/wZNOKxMVzDkR0SJecZVQzjjItmKdvDDbOxQZh/ru5bAY3cS183jTzhq0CcTutrswsRFtqj3MAVTcUcrcXKg==}
+    requiresBuild: true
     dependencies:
       '@clack/core': 0.3.2
       picocolors: 1.0.0
@@ -384,6 +378,13 @@ packages:
     dev: true
     bundledDependencies:
       - is-unicode-supported
+
+  /@clack/core@0.3.2:
+    resolution: {integrity: sha512-FZnsNynwGDIDktx6PEZK1EuCkFpY4ldEX6VYvfl0dqeoLPb9Jpw1xoUXaVcGR8ExmYNm1w2vdGdJkEUYD/2pqg==}
+    dependencies:
+      picocolors: 1.0.0
+      sisteransi: 1.0.5
+    dev: true
 
   /@esbuild-kit/cjs-loader@2.4.2:
     resolution: {integrity: sha512-BDXFbYOJzT/NBEtp71cvsrGPwGAMGRB/349rwKuoxNSiKjPraNNnlK6MIIabViCjqZugu6j+xeMDlEkWdHHJSg==}

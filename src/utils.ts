@@ -21,10 +21,14 @@ export function isValidPackageName(projectName: string) {
 }
 
 export function toValidPackageName(projectName: string) {
-  return projectName
-    .trim()
+  return kebabCase(projectName
+    .trim())
     .toLowerCase()
     .replace(/\s+/g, "-")
     .replace(/^[._]/, "")
     .replace(/[^a-z\d\-~]+/g, "-");
+}
+
+function kebabCase(str: string) {
+  return str.replace(/([a-z])([A-Z])/g, "$1-$2").replace(/\s+/g, "-").toLowerCase();
 }
