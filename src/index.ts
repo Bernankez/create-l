@@ -43,9 +43,11 @@ if (isValidPackageName(getProjectName(projectName))) {
   });
 }
 const libType = await select({
-  message: "Select a library type",
+  message: "What kind of library do you want to build?",
   options: [
     { label: "NodeJS library", value: "library" },
+    { label: "NodeJS library (monorepo)", value: "monorepo" },
+    { label: "Vue SFC", value: "sfc" },
     { label: "Chrome extension", value: "chrome-extension", hint: "unavailable" },
     { label: "VSCode extension", value: "vscode-extension", hint: "unavailable" },
   ],
