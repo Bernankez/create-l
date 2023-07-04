@@ -46,7 +46,7 @@
     "dev": "tsup --watch src/index.ts",
     "build": "tsup",
     "start": "tsx src/index.ts",
-    "watch": "tsx --watch src/index.ts",
+    "watch": "tsx watch src/index.ts",
     "release": "bumpp && pnpm publish",
     "test": "vitest run",
     "test:watch": "vitest",

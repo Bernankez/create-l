@@ -46,7 +46,7 @@
     "dev": "unbuild --stub",
     "build": "unbuild",
     "start": "tsx src/index.ts",
-    "watch": "tsx --watch src/index.ts",
+    "watch": "tsx watch src/index.ts",
     "release": "bumpp && pnpm publish",
     "test": "vitest run",
     "test:watch": "vitest",
