@@ -1,0 +1,6 @@
+{
+  "extends": "@bernankez/stylelint-config",
+  "rules": {
+    "function-no-unknown": null
+  }
+}
