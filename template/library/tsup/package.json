@@ -1,0 +1,80 @@
+{
+  "name": "package-name",
+  "type": "module",
+  "version": "0.0.0",
+  "packageManager": "pnpm@8.6.6",
+  "description": "",
+  "author": {
+    "name": "author-name",
+    "email": "author-email",
+    "url": "author-homepage"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/github-username/project-name#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/github-username/project-name.git"
+  },
+  "bugs": "https://github.com/github-username/project-name/issues",
+  "keywords": [],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "prepare": "simple-git-hooks",
+    "prepublishOnly": "pnpm build",
+    "dev": "tsup --watch src/index.ts",
+    "build": "tsup",
+    "start": "tsx src/index.ts",
+    "watch": "tsx --watch src/index.ts",
+    "release": "bumpp && pnpm publish",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@bernankez/eslint-config": "^0.7.0",
+    "@types/node": "^20.3.3",
+    "bumpp": "^9.1.1",
+    "eslint": "^8.44.0",
+    "lint-staged": "^13.2.3",
+    "rimraf": "^5.0.1",
+    "simple-git-hooks": "^2.8.1",
+    "tsup": "^6.7.0",
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6",
+    "vite": "^4.3.9",
+    "vitest": "^0.32.4"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
