@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.0",
   "packageManager": "pnpm@8.6.5",
-  "description": "A Starter Kit to create library",
+  "description": "Simple scaffold to create library.",
   "author": {
     "name": "Cole",
     "email": "bernankeic@gmail.com"
@@ -17,9 +17,10 @@
   "bugs": "https://github.com/bernankez/create-l/issues",
   "keywords": [
     "template",
-    "starter",
     "typescript",
-    "lib"
+    "lib",
+    "scaffold",
+    "starter"
   ],
   "bin": {
     "create-l": "index.js",
@@ -27,7 +28,8 @@
   },
   "files": [
     "index.js",
-    "dist"
+    "dist",
+    "template"
   ],
   "engines": {
     "node": "^14.18.0 || >=16.0.0"

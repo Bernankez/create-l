@@ -1,8 +1,18 @@
 import { existsSync } from "node:fs";
-import { cancel, confirm, intro, select, text } from "@bernankez/prompt";
-import { getProjectName, isEmpty, isValidPackageName, toValidPackageName } from "./utils";
+import { join, relative, resolve } from "node:path";
+import { cwd } from "node:process";
+import { cancel, confirm, intro, isCancel, log, onCancel, outro, select, text } from "@bernankez/prompt";
+import { copySync, emptyDirSync, ensureDirSync } from "fs-extra/esm";
+import { getDirname, getProjectName, isEmpty, isValidPackageName, pkgFromUserAgent, replaceWords, toValidPackageName } from "./utils";
 
-intro("create-l. Starter Kit to create library.");
+onCancel((value) => {
+  if (isCancel(value)) {
+    cancel("Operation canceled");
+    process.exit(0);
+  }
+});
+
+intro("create-l. Simple scaffold to create library.");
 // Project name
 const defaultDir = "my-lib";
 const projectName = await text({
@@ -42,6 +52,7 @@ if (isValidPackageName(getProjectName(projectName))) {
     },
   });
 }
+// Library type
 const libType = await select({
   message: "What kind of library do you want to build?",
   options: [
@@ -52,22 +63,66 @@ const libType = await select({
     { label: "VSCode extension", value: "vscode-extension", hint: "unavailable" },
   ],
 });
-const buildTool = await select({
-  message: "Select a build tool",
-  options: [
-    { label: "unbuild", value: "unbuild", hint: "Recommended" },
-    { label: "tsup", value: "tsup" },
-    { label: "vite", value: "vite" },
-  ],
-});
-const language = await select({
-  message: "Select a language",
-  options: [
-    { label: "TypeScript", value: "typescript" },
-    { label: "JavaScript", value: "javascript" },
-  ],
-});
-const installDependencies = await confirm({
-  message: "Install dependencies?",
-});
-console.log(projectName, overwrite, packageName, libType, buildTool, language);
+// Build tool
+let buildTool: "unbuild" | "tsup" | "vite" | undefined;
+if (libType === "library") {
+  buildTool = await select({
+    message: "Select a build tool",
+    options: [
+      { label: "unbuild", value: "unbuild", hint: "Recommended" },
+      { label: "tsup", value: "tsup" },
+      { label: "vite", value: "vite" },
+    ],
+  });
+} else if (libType === "chrome-extension" || libType === "vscode-extension") {
+  cancel("'chrome-extension' and 'vscode-extension' is not yet supported.");
+  process.exit(0);
+}
+
+const root = join(cwd(), projectName);
+// ensure dir
+if (overwrite) {
+  emptyDirSync(root);
+}
+ensureDirSync(root);
+// decide template
+let templateDir: string;
+const __dirname = getDirname(import.meta.url);
+if (libType === "library") {
+  if (buildTool === "unbuild") {
+    templateDir = resolve(__dirname, "../template/library/unbuild");
+  } else if (buildTool === "tsup") {
+    templateDir = resolve(__dirname, "../template/library/tsup");
+  } else if (buildTool === "vite") {
+    templateDir = resolve(__dirname, "../template/library/vite");
+  }
+} else if (libType === "sfc") {
+  templateDir = resolve(__dirname, "../template/sfc");
+} else if (libType === "monorepo") {
+  templateDir = resolve(__dirname, "../template/monorepo");
+}
+// copy files
+copySync(templateDir!, root);
+replaceWords(root!, /package-name/g, packageName);
+replaceWords(root!, /project-name/g, projectName);
+
+const pkgInfo = pkgFromUserAgent(process.env.npm_config_user_agent);
+const pkgManager = pkgInfo ? pkgInfo.name : "npm";
+const cdProjectName = relative(cwd(), root);
+let cd = "";
+if (root !== cwd()) {
+  cd = `cd ${
+        cdProjectName.includes(" ") ? `"${cdProjectName}"` : cdProjectName
+      }\n`;
+}
+let hint = "";
+switch (pkgManager) {
+  case "yarn":
+    hint = "yarn\n  yarn dev";
+    break;
+  default:
+    hint = `${pkgManager} install\n${pkgManager} run dev`;
+    break;
+}
+log.step(`Done. Now run:\n\n${cd}${hint}`);
+outro("Complete!");

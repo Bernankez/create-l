@@ -1,21 +1,23 @@
 # create-l
 
-A Starter Kit to create library.
+## create-l (l means lib). Simple scaffold to create library.
 
 With NPM:
 
 ```bash
-$ npm create vite@latest
+$ npm create l@latest
 ```
 
 With Yarn:
 
 ```bash
-$ yarn create vite
+$ yarn create l
 ```
 
 With PNPM:
 
 ```bash
-$ pnpm create vite
+$ pnpm create l
 ```
+
+Then follow the prompts!
