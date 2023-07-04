@@ -26,8 +26,6 @@ Automatically generate changelog by [changelogithub](https://github.com/antfu/ch
 ### Getting Started
 
 - [ ] Replacing all the following fields in the project, including this file.
-- `project-name` - Project name
-- `package-name` - Package name
 - `author-name` - Author name
 - `author-email` - Author email
 - `author-homepage` - Author homepage url
