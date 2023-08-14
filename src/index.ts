@@ -7,7 +7,7 @@ import { getDirname, getProjectName, isEmpty, isValidPackageName, pkgFromUserAge
 
 onCancel((value) => {
   if (isCancel(value)) {
-    cancel("Operation canceled");
+    cancel("Operation cancelled");
     process.exit(0);
   }
 });
@@ -29,7 +29,7 @@ if (existsSync(projectName) && !isEmpty(projectName)) {
     message: `${projectName === "." ? "Current directory" : `Target directory ${projectName}`} is not empty. Remove existing files and continue?`,
   });
   if (!overwrite) {
-    cancel("Operation canceled");
+    cancel("Operation cancelled");
     process.exit(0);
   }
 }
