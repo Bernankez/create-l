@@ -8,7 +8,7 @@ import { log } from "./log";
 
 log.info("create-l. TypeScript Library Scaffold.", { prefix: "\n" });
 
-const { projectName, packageName, overwrite, libType, buildTool } = await usePrompt();
+const { projectName, packageName, overwrite, libType, buildTool, packageJson } = await usePrompt();
 
 const root = join(cwd(), projectName);
 // Ensure dir
@@ -33,6 +33,12 @@ copySync(templateDir, root);
 replaceWords(root, /__project-name__/g, projectName);
 replaceWords(root, /__package-name__/g, packageName);
 replaceWords(root, /__LibraryName__/g, libraryName);
+
+if (packageJson) {
+  // TODO replace words in package.json
+  // replace names in files
+  // replace infos in README.md
+}
 
 const pkgInfo = pkgFromUserAgent(process.env.npm_config_user_agent);
 const pkgManager = pkgInfo ? pkgInfo.name : "npm";

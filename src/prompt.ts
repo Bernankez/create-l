@@ -83,12 +83,76 @@ export async function usePrompt() {
     })).buildTool;
   }
 
+  let packageJson: {
+    description: string;
+    authorName: string;
+    authorEmail: string;
+    githubUsername: string;
+    result: string;
+  } | undefined;
+  const { customPackageJson } = await prompt<{ customPackageJson: boolean }>({
+    message: "Customize package.json?",
+    name: "customPackageJson",
+    type: "confirm",
+    initial: true,
+  });
+  if (customPackageJson) {
+    packageJson = await prompt<{
+      description: string;
+      authorName: string;
+      authorEmail: string;
+      githubUsername: string;
+      result: string;
+    }>({
+      type: "snippet",
+      name: "packageJson",
+      message: "Fill out the fields in package.json",
+      required: true,
+      // @ts-expect-error no type def
+      fields: [
+        {
+          name: "description",
+          message: "Description",
+        },
+        {
+          name: "authorName",
+          message: "Author name",
+        },
+        {
+          name: "authorEmail",
+          message: "Author email",
+        },
+        {
+          name: "githubUsername",
+          message: "Github username",
+        },
+      ],
+      template: `{
+  "name": "${packageName}",
+  "version": "0.0.0",
+  "description": "\${description}",
+  "author" : {
+    "name": "\${authorName}",
+    "email": "\${authorEmail}",
+    "url": "https://github.com/\${githubUsername}"
+  },
+  "homepage": "https://github.com/\${githubUsername}/${projectName}#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/\${githubUsername}/${projectName}.git"
+  },
+  "bugs": "https://github.com/\${githubUsername}/${projectName}/issues",
+}`,
+    });
+  }
+
   return {
     projectName,
     packageName,
     overwrite,
     libType,
     buildTool,
+    packageJson,
   };
 }
 
