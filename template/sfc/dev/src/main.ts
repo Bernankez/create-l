@@ -1,10 +1,10 @@
 import { createApp } from "vue";
 
 // Using import aliases in Vite
-import MyLibrary from "package-name";
+import __LibraryName__ from "__package-name__";
 import App from "./App.vue";
 
 const app = createApp(App);
-app.use(MyLibrary);
+app.use(__LibraryName__);
 
 app.mount("#app");

@@ -1,5 +1,5 @@
 {
-  "name": "package-name",
+  "name": "__package-name__",
   "type": "module",
   "version": "0.0.0",
   "packageManager": "pnpm@8.6.6",
@@ -10,12 +10,12 @@
     "url": "author-homepage"
   },
   "license": "MIT",
-  "homepage": "https://github.com/github-username/project-name#readme",
+  "homepage": "https://github.com/github-username/__project-name__#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/github-username/project-name.git"
+    "url": "git+https://github.com/github-username/__project-name__.git"
   },
-  "bugs": "https://github.com/github-username/project-name/issues",
+  "bugs": "https://github.com/github-username/__project-name__/issues",
   "keywords": [],
   "sideEffects": false,
   "exports": {

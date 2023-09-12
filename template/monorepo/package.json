@@ -1,5 +1,5 @@
 {
-  "name": "@package-name/monorepo",
+  "name": "@__package-name__/monorepo",
   "type": "module",
   "version": "0.0.0",
   "private": true,
@@ -12,7 +12,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/github-username/project-name.git"
+    "url": "git+https://github.com/github-username/__project-name__.git"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",

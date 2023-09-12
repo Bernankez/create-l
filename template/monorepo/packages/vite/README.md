@@ -1,1 +1,1 @@
-# @project-name/Vite
+# @__project-name__/Vite

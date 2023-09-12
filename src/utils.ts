@@ -1,6 +1,7 @@
 import { basename, dirname, resolve } from "node:path";
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { kebabCase } from "scule";
 
 export function getDirname(url: string) {
   return typeof __dirname === "string" ? __dirname : dirname(fileURLToPath(url));
@@ -58,10 +59,6 @@ export function toValidPackageName(projectName: string) {
     .replace(/\s+/g, "-")
     .replace(/^[._]/, "")
     .replace(/[^a-z\d\-~]+/g, "-");
-}
-
-function kebabCase(str: string) {
-  return str.replace(/([a-z])([A-Z])/g, "$1-$2").replace(/\s+/g, "-").toLowerCase();
 }
 
 export function pkgFromUserAgent(userAgent: string | undefined) {

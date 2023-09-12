@@ -2,7 +2,7 @@
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
     "paths": {
-      "package-name": ["./src"]
+      "__package-name__": ["./src"]
     }
   }
 }
