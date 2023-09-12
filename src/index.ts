@@ -1,110 +1,34 @@
-import { existsSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { cwd } from "node:process";
-import { cancel, confirm, intro, isCancel, log, onCancel, outro, select, text } from "@bernankez/prompt";
 import { copySync, emptyDirSync, ensureDirSync } from "fs-extra/esm";
-import { getDirname, getProjectName, isEmpty, isValidPackageName, pkgFromUserAgent, replaceWords, toValidPackageName } from "./utils";
+import { usePrompt } from "./prompt";
+import { getDirname, pkgFromUserAgent, replaceWords } from "./utils";
+import { log } from "./log";
 
-onCancel((value) => {
-  if (isCancel(value)) {
-    cancel("Operation cancelled");
-    process.exit(0);
-  }
-});
+log.info("create-l. TypeScript Library Scaffold.", { prefix: "\n" });
 
-intro("create-l. Simple scaffold to create library.");
-// Project name
-const defaultDir = "my-lib";
-const projectName = await text({
-  message: "Project name",
-  placeholder: defaultDir,
-  format: (value) => {
-    return value || defaultDir;
-  },
-});
-// Empty check
-let overwrite = false;
-if (existsSync(projectName) && !isEmpty(projectName)) {
-  overwrite = await confirm({
-    message: `${projectName === "." ? "Current directory" : `Target directory ${projectName}`} is not empty. Remove existing files and continue?`,
-  });
-  if (!overwrite) {
-    cancel("Operation cancelled");
-    process.exit(0);
-  }
-}
-// Package name
-let packageName: string;
-const defaultPackageName = toValidPackageName(getProjectName(projectName));
-if (isValidPackageName(getProjectName(projectName))) {
-  packageName = defaultPackageName;
-} else {
-  packageName = await text({
-    message: "Package name",
-    placeholder: defaultPackageName,
-    validate(value) {
-      if (value && !isValidPackageName(value)) {
-        return "Invalid package.json name";
-      }
-    },
-    format: (value) => {
-      return value || defaultPackageName;
-    },
-  });
-}
-// Library type
-const libType = await select({
-  message: "What kind of library do you want to build?",
-  options: [
-    { label: "NodeJS library", value: "library" },
-    { label: "NodeJS library (monorepo)", value: "monorepo" },
-    { label: "Vue SFC", value: "sfc" },
-    { label: "Chrome extension", value: "chrome-extension", hint: "unavailable" },
-    { label: "VSCode extension", value: "vscode-extension", hint: "unavailable" },
-  ],
-});
-// Build tool
-let buildTool: "unbuild" | "tsup" | "vite" | undefined;
-if (libType === "library") {
-  buildTool = await select({
-    message: "Select a build tool",
-    options: [
-      { label: "unbuild", value: "unbuild", hint: "Recommended" },
-      { label: "tsup", value: "tsup" },
-      { label: "vite", value: "vite" },
-    ],
-  });
-} else if (libType === "chrome-extension" || libType === "vscode-extension") {
-  cancel("'chrome-extension' and 'vscode-extension' is not yet supported.");
-  process.exit(0);
-}
+const { projectName, packageName, overwrite, libType, buildTool } = await usePrompt();
 
 const root = join(cwd(), projectName);
-// ensure dir
+// Ensure dir
 if (overwrite) {
   emptyDirSync(root);
 }
 ensureDirSync(root);
-// decide template
+
+// Decide template
 let templateDir: string;
 const __dirname = getDirname(import.meta.url);
-if (libType === "library") {
-  if (buildTool === "unbuild") {
-    templateDir = resolve(__dirname, "../template/library/unbuild");
-  } else if (buildTool === "tsup") {
-    templateDir = resolve(__dirname, "../template/library/tsup");
-  } else if (buildTool === "vite") {
-    templateDir = resolve(__dirname, "../template/library/vite");
-  }
-} else if (libType === "sfc") {
-  templateDir = resolve(__dirname, "../template/sfc");
-} else if (libType === "monorepo") {
-  templateDir = resolve(__dirname, "../template/monorepo");
+if (libType === "library" && buildTool) {
+  templateDir = resolve(__dirname, `../template/library/${buildTool}`);
+} else {
+  templateDir = resolve(__dirname, `../template/${libType}`);
 }
-// copy files
-copySync(templateDir!, root);
-replaceWords(root!, /package-name/g, packageName);
-replaceWords(root!, /project-name/g, projectName);
+
+// Copy files
+copySync(templateDir, root);
+replaceWords(root, /project-name/g, projectName);
+replaceWords(root, /package-name/g, packageName);
 
 const pkgInfo = pkgFromUserAgent(process.env.npm_config_user_agent);
 const pkgManager = pkgInfo ? pkgInfo.name : "npm";
@@ -124,5 +48,5 @@ switch (pkgManager) {
     hint = `${pkgManager} install\n${pkgManager} run dev`;
     break;
 }
-log.step(`Done. Now run:\n\n${cd}${hint}`);
-outro("Complete!");
+
+log.success(`Done. Now run:\n\n${cd}${hint}`, { prefix: "\n" });
