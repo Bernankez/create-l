@@ -1,18 +1,18 @@
 {
   "name": "@__package-name__/monorepo",
   "type": "module",
-  "version": "0.0.0",
+  "version": "__version__",
   "private": true,
   "packageManager": "pnpm@8.6.6",
-  "description": "",
+  "description": "__description__",
   "author": {
-    "name": "author-name",
-    "email": "author-email"
+    "name": "__author-name__",
+    "email": "__author-email__"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/github-username/__project-name__.git"
+    "url": "git+https://github.com/__github-username__/__project-name__.git"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",

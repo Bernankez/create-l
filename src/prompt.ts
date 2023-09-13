@@ -84,11 +84,11 @@ export async function usePrompt() {
   }
 
   let packageJson: {
+    version: string;
     description: string;
     authorName: string;
     authorEmail: string;
     githubUsername: string;
-    result: string;
   } | undefined;
   const { customPackageJson } = await prompt<{ customPackageJson: boolean }>({
     message: "Customize package.json?",
@@ -97,12 +97,17 @@ export async function usePrompt() {
     initial: true,
   });
   if (customPackageJson) {
-    packageJson = await prompt<{
-      description: string;
-      authorName: string;
-      authorEmail: string;
-      githubUsername: string;
-      result: string;
+    packageJson = (await prompt<{
+      packageJson: {
+        values: {
+          version: string;
+          description: string;
+          authorName: string;
+          authorEmail: string;
+          githubUsername: string;
+        };
+        result: string;
+      };
     }>({
       type: "snippet",
       name: "packageJson",
@@ -129,7 +134,7 @@ export async function usePrompt() {
       ],
       template: `{
   "name": "${packageName}",
-  "version": "0.0.0",
+  "version": "\${version}",
   "description": "\${description}",
   "author" : {
     "name": "\${authorName}",
@@ -143,7 +148,7 @@ export async function usePrompt() {
   },
   "bugs": "https://github.com/\${githubUsername}/${projectName}/issues",
 }`,
-    });
+    })).packageJson.values;
   }
 
   return {

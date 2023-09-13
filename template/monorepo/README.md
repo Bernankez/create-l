@@ -22,11 +22,6 @@ Introducing by [bumpp](https://github.com/antfu/bumpp).
 Automatically generate changelog by [changelogithub](https://github.com/antfu/changelogithub).
 
 ### Getting Started
-
-- [ ] Replacing all the following fields in the project, including this file.
-- `author-name` - Author name
-- `author-email` - Author email
-- `author-homepage` - Author homepage url
-- `github-username` - GitHub username
-- [ ] Set your Action secret via [GitHub](https://github.com/github-username/__project-name__/settings/secrets/actions). Secret name is `TOKEN`. [Learn more about encrypted secrets.](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
+__readme-placeholder__
+- [ ] Set your Action secret via [GitHub](https://github.com/__github-username__/__project-name__/settings/secrets/actions). Secret name is `TOKEN`. [Learn more about encrypted secrets.](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
 - [ ] Check and supplement the additional information in `package.json`
