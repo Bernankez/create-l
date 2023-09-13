@@ -3,24 +3,43 @@
 [![npm](https://img.shields.io/npm/v/create-l?color=red&label=npm)](https://www.npmjs.com/package/create-l)
 [![CI](https://github.com/Bernankez/create-l/workflows/CI/badge.svg)](https://github.com/Bernankez/create-l/actions)
 
-## create-l (l means lib). Simple scaffold to create library.
+**TypeScript Library Scaffold.**
 
-With NPM:
+## Using
+
+With npm:
 
 ```bash
 $ npm create l@latest
 ```
 
-With Yarn:
+With yarn:
 
 ```bash
 $ yarn create l
 ```
 
-With PNPM:
+With pnpm:
 
 ```bash
 $ pnpm create l
 ```
 
-Then follow the prompts!
+With bun:
+
+```bash
+$ bunx create-vite
+```
+
+---
+
+Currently supported template presets include:
+
+- unbuild
+- tsup
+- vite
+- monorepo
+  - unbuild
+  - tsup
+  - vite
+- vue sfc
