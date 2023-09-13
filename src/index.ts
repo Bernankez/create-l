@@ -1,12 +1,12 @@
 import { join, relative, resolve } from "node:path";
 import { cwd } from "node:process";
-import { writeFileSync } from "node:fs";
-import { copySync, emptyDirSync, ensureDirSync } from "fs-extra/esm";
+import { readdirSync, writeFileSync } from "node:fs";
+import { emptyDirSync, ensureDirSync } from "fs-extra/esm";
 import { pascalCase } from "scule";
 import { run } from "npm-check-updates";
 import type { PackageFile } from "npm-check-updates/build/src/types/PackageFile";
 import { usePrompt } from "./prompt";
-import { getDirname, pkgFromUserAgent, replaceWords } from "./utils";
+import { copy, getDirname, pkgFromUserAgent, replaceWords } from "./utils";
 import { log } from "./log";
 
 const PROJECT_NAME = "__project-name__";
@@ -42,7 +42,21 @@ if (libType === "library" && buildTool) {
 const libraryName = pascalCase(packageName);
 
 // Copy files
-copySync(templateDir, root);
+const renameFiles: Record<string, string> = {
+  _gitignore: ".gitignore",
+};
+function write(file: string, content?: string) {
+  const targetPath = renameFiles[file] ? join(root, renameFiles[file]) : join(root, file);
+  if (content) {
+    writeFileSync(targetPath, content);
+  } else {
+    copy(join(templateDir, file), targetPath);
+  }
+}
+const files = readdirSync(templateDir);
+for (const file of files) {
+  write(file);
+}
 replaceWords(root, new RegExp(PROJECT_NAME, "g"), projectName);
 replaceWords(root, new RegExp(PACKAGE_NAME, "g"), packageName);
 replaceWords(root, new RegExp(LIBRARY_NAME, "g"), libraryName);

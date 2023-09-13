@@ -1,5 +1,5 @@
 import { basename, dirname, resolve } from "node:path";
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { kebabCase } from "scule";
 
@@ -30,6 +30,24 @@ export function replaceWords(dir: string, origin: RegExp | string, target: strin
     const file = readFileSync(dir, "utf-8");
     const replaced = file.replace(origin, target);
     writeFileSync(resolve(dir), replaced, "utf-8");
+  }
+}
+
+export function copy(src: string, dest: string) {
+  const stat = statSync(src);
+  if (stat.isDirectory()) {
+    copyDir(src, dest);
+  } else {
+    copyFileSync(src, dest);
+  }
+}
+
+export function copyDir(srcDir: string, destDir: string) {
+  mkdirSync(destDir, { recursive: true });
+  for (const file of readdirSync(srcDir)) {
+    const srcFile = resolve(srcDir, file);
+    const destFile = resolve(destDir, file);
+    copy(srcFile, destFile);
   }
 }
 
