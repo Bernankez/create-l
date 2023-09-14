@@ -22,6 +22,7 @@
     "scaffold",
     "starter"
   ],
+  "sideEffects": false,
   "bin": {
     "create-l": "index.js",
     "cl": "index.js"
