@@ -1,23 +1,12 @@
-import { join, relative, resolve } from "node:path";
+import { join, relative } from "node:path";
 import { cwd } from "node:process";
-import { readdirSync, writeFileSync } from "node:fs";
 import { emptyDirSync, ensureDirSync } from "fs-extra/esm";
 import { pascalCase } from "scule";
-import { run } from "npm-check-updates";
-import type { PackageFile } from "npm-check-updates/build/src/types/PackageFile";
 import { usePrompt } from "./prompt";
-import { copy, getDirname, pkgFromUserAgent, replaceWords } from "./utils";
-import { log } from "./log";
-
-const PROJECT_NAME = "__project-name__";
-const PACKAGE_NAME = "__package-name__";
-const LIBRARY_NAME = "__LibraryName__";
-const VERSION = "__version__";
-const DESCRIPTION = "__description__";
-const README_PLACEHOLDER = "__readme-placeholder__";
-const AUTHOR_NAME = "__author-name__";
-const AUTHOR_EMAIL = "__author-email__";
-const GITHUB_USERNAME = "__github-username__";
+import { log } from "./utils/log";
+import { dumpPackages, packageFromUserAgent } from "./packages";
+import { replacePlaceholder } from "./placeholder";
+import { chooseTemplate, copyTemplate } from "./template";
 
 log.info("create-l. TypeScript Library Scaffold.", { prefix: "\n" });
 
@@ -30,83 +19,28 @@ if (overwrite) {
 }
 ensureDirSync(root);
 
-// Decide template
-let templateDir: string;
-const __dirname = getDirname(import.meta.url);
-if (libType === "library" && buildTool) {
-  templateDir = resolve(__dirname, `../template/library/${buildTool}`);
-} else {
-  templateDir = resolve(__dirname, `../template/${libType}`);
-}
+const templateDir = chooseTemplate(libType, buildTool);
 
-const libraryName = pascalCase(packageName);
+copyTemplate(templateDir, root, {
+  renameFiles: {
+    _gitignore: ".gitignore",
+  },
+});
 
-// Copy files
-const renameFiles: Record<string, string> = {
-  _gitignore: ".gitignore",
-};
-function write(file: string, content?: string) {
-  const targetPath = renameFiles[file] ? join(root, renameFiles[file]) : join(root, file);
-  if (content) {
-    writeFileSync(targetPath, content);
-  } else {
-    copy(join(templateDir, file), targetPath);
-  }
-}
-const files = readdirSync(templateDir);
-for (const file of files) {
-  write(file);
-}
-replaceWords(root, new RegExp(PROJECT_NAME, "g"), projectName);
-replaceWords(root, new RegExp(PACKAGE_NAME, "g"), packageName);
-replaceWords(root, new RegExp(LIBRARY_NAME, "g"), libraryName);
-
-if (packageJson) {
-  replaceWords(root, new RegExp(VERSION, "g"), packageJson.version);
-  replaceWords(root, new RegExp(DESCRIPTION, "g"), packageJson.description);
-  replaceWords(root, new RegExp(AUTHOR_NAME, "g"), packageJson.authorName);
-  replaceWords(root, new RegExp(AUTHOR_EMAIL, "g"), packageJson.authorEmail);
-  replaceWords(root, new RegExp(GITHUB_USERNAME, "g"), packageJson.githubUsername);
-  replaceWords(root, new RegExp(README_PLACEHOLDER, "g"), "");
-} else {
-  const readmeHint = `\n- [ ] Replacing all the following fields in the project.
-- \`__description__\` - Package description
-- \`__author-name__\` - Author name
-- \`__author-email__\` - Author email
-- \`__github-username__\` - GitHub username`;
-  replaceWords(root, new RegExp(VERSION, "g"), "0.0.0");
-  replaceWords(root, new RegExp(README_PLACEHOLDER, "g"), readmeHint);
-}
+// replace placeholder
+replacePlaceholder(root, {
+  projectName,
+  packageName,
+  libraryName: pascalCase(packageName),
+  packageJson,
+});
 
 // Get package info
-const pkgInfo = pkgFromUserAgent(process.env.npm_config_user_agent);
-const pkgManager = pkgInfo ? pkgInfo.name : "npm";
+const pkgManager = packageFromUserAgent(process.env.npm_config_user_agent)?.name || "npm";
 
-// Get package files paths
-const packageFiles = ["./package.json"];
-if (libType === "monorepo") {
-  packageFiles.push("./packages/tsup/package.json", "./packages/unbuild/package.json", "./packages/vite/package.json");
-}
-
-// Get latest package versions
-const tasks: Promise<PackageFile>[] = [];
-for (const packageFile of packageFiles) {
-  tasks.push(run({
-    packageFile: resolve(root, packageFile),
-    cache: false,
-    jsonAll: true,
-    packageManager: pkgManager as "npm" | "yarn" | "pnpm" | "deno" | "bun" | "staticRegistry",
-  }) as Promise<PackageFile>);
-}
-
-// Write packageJson files
+// dump packages
 log.info("fetching the latest package information...");
-
-await Promise.all(tasks).then((pkgJsons) => {
-  for (const [index, pkgJson] of pkgJsons.entries()) {
-    writeFileSync(resolve(root, packageFiles[index]), JSON.stringify(pkgJson, null, 2), "utf-8");
-  }
-});
+await dumpPackages(root, libType === "monorepo");
 
 const cdProjectName = relative(cwd(), root);
 let cd = "";

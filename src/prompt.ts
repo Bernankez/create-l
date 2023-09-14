@@ -1,8 +1,9 @@
 import { existsSync } from "fs";
 // eslint-disable-next-line import/no-named-default
 import { default as Enquirer } from "enquirer";
-import { getProjectName, isEmpty, isValidPackageName, toValidPackageName } from "./utils";
-import { log } from "./log";
+import { getProjectName, isValidPackageName, toValidPackageName } from "./utils";
+import { log } from "./utils/log";
+import { isEmpty } from "./io";
 
 const { prompt } = Enquirer;
 

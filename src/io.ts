@@ -1,7 +1,6 @@
-import { basename, dirname, resolve } from "node:path";
+import { dirname, resolve } from "node:path";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { kebabCase } from "scule";
 
 export function getDirname(url: string) {
   return typeof __dirname === "string" ? __dirname : dirname(fileURLToPath(url));
@@ -58,33 +57,4 @@ export function formatTargetDir(targetDir?: string) {
 export function isEmpty(path: string) {
   const files = readdirSync(path);
   return files.length === 0 || (files.length === 1 && files[0] === ".git");
-}
-
-export function getProjectName(projectName: string) {
-  return projectName === "." ? basename(resolve()) : projectName;
-}
-
-export function isValidPackageName(projectName: string) {
-  return /^(?:@[a-z\d\-*~][a-z\d\-*._~]*\/)?[a-z\d\-~][a-z\d\-._~]*$/.test(
-    projectName,
-  );
-}
-
-export function toValidPackageName(projectName: string) {
-  return kebabCase(projectName
-    .trim())
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/^[._]/, "")
-    .replace(/[^a-z\d\-~]+/g, "-");
-}
-
-export function pkgFromUserAgent(userAgent: string | undefined) {
-  if (!userAgent) { return undefined; }
-  const pkgSpec = userAgent.split(" ")[0];
-  const pkgSpecArr = pkgSpec.split("/");
-  return {
-    name: pkgSpecArr[0],
-    version: pkgSpecArr[1],
-  };
 }
