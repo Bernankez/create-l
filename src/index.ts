@@ -4,7 +4,7 @@ import { emptyDirSync, ensureDirSync } from "fs-extra/esm";
 import { pascalCase } from "scule";
 import { usePrompt } from "./prompt";
 import { log } from "./utils/log";
-import { dumpPackages, packageFromUserAgent } from "./packages";
+import { packageFromUserAgent } from "./packages";
 import { replacePlaceholder } from "./placeholder";
 import { chooseTemplate, copyTemplate } from "./template";
 
@@ -40,8 +40,8 @@ async function create() {
   const pkgManager = packageFromUserAgent(process.env.npm_config_user_agent)?.name || "npm";
 
   // dump packages
-  log.info("fetching the latest package information...");
-  await dumpPackages(root, libType === "monorepo");
+  // log.info("fetching the latest package information...");
+  // await dumpPackages(root, libType === "monorepo");
 
   const cdProjectName = relative(cwd(), root);
   let cd = "";
