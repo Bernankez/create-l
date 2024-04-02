@@ -2,9 +2,10 @@ import { join, relative } from "node:path";
 import { cwd } from "node:process";
 import { emptyDirSync, ensureDirSync } from "fs-extra/esm";
 import { pascalCase } from "scule";
+import { prompt } from "enquirer";
 import { usePrompt } from "./prompt";
 import { log } from "./utils/log";
-import { packageFromUserAgent } from "./packages";
+import { bumpPackages, packageFromUserAgent } from "./packages";
 import { replacePlaceholder } from "./placeholder";
 import { chooseTemplate, copyTemplate } from "./template";
 
@@ -39,9 +40,17 @@ async function create() {
   // Get package info
   const pkgManager = packageFromUserAgent(process.env.npm_config_user_agent)?.name || "npm";
 
-  // dump packages
-  // log.info("fetching the latest package information...");
-  // await dumpPackages(root, libType === "monorepo");
+  const shouldBump = (await prompt<{ bump: boolean }>({
+    message: "Bump packages?",
+    name: "bump",
+    type: "confirm",
+    initial: true,
+  })).bump;
+  if (shouldBump) {
+    // bump packages
+    log.info("fetching the latest package information...");
+    await bumpPackages(root, libType === "monorepo");
+  }
 
   const cdProjectName = relative(cwd(), root);
   let cd = "";
