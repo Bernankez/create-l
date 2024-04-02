@@ -1,7 +1,7 @@
 import { writeFileSync } from "fs";
 import { CheckPackages, dumpDependencies } from "taze";
 
-export async function dumpPackages(cwd: string, recursive = false) {
+export async function bumpPackages(cwd: string, recursive = false) {
   const packages = await checkUpdates(cwd, recursive);
   for (const filepath in packages) {
     writeFileSync(filepath, JSON.stringify(packages[filepath], null, 2), "utf-8");
