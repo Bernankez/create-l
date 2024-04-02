@@ -1,14 +1,22 @@
 import { join, resolve } from "node:path";
 import { readdirSync } from "node:fs";
-import { copy, getDirname } from "./io";
+import { pathExistsSync } from "fs-extra/esm";
+import { resolvePath } from "@bernankez/utils/node";
+import { copy } from "./io";
+import type { BundleTool, TemplateType } from "./types";
 
-export function chooseTemplate(libType: string, buildTool?: string) {
+const { __dirname } = resolvePath(import.meta.url);
+export const rootDir = resolve(__dirname, "..");
+
+export function chooseTemplate(templateType: TemplateType, bundleTool?: BundleTool) {
   let templateDir: string;
-  const __dirname = getDirname(import.meta.url);
-  if (libType === "library" && buildTool) {
-    templateDir = resolve(__dirname, `../template/library/${buildTool}`);
+  if (templateType === "library" && bundleTool) {
+    templateDir = resolve(rootDir, `template/library/${bundleTool}`);
   } else {
-    templateDir = resolve(__dirname, `../template/${libType}`);
+    templateDir = resolve(rootDir, `template/${templateType}`);
+  }
+  if (!pathExistsSync(templateDir)) {
+    throw new Error("Template not found");
   }
   return templateDir;
 }

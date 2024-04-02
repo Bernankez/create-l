@@ -1,10 +1,5 @@
-import { dirname, resolve } from "node:path";
+import { resolve } from "node:path";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-
-export function getDirname(url: string) {
-  return typeof __dirname === "string" ? __dirname : dirname(fileURLToPath(url));
-}
 
 export function replaceWords(dir: string, origin: RegExp | string, target: string) {
   if (!existsSync(dir)) {

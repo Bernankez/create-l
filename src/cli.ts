@@ -1,6 +1,6 @@
 import { join, relative } from "node:path";
 import { cwd, env } from "node:process";
-import { emptyDirSync, ensureDirSync } from "fs-extra";
+import { emptyDirSync, ensureDirSync } from "fs-extra/esm";
 import { pascalCase } from "scule";
 // waiting for release https://github.com/enquirer/enquirer/pull/427
 // eslint-disable-next-line import/no-named-default
@@ -16,7 +16,7 @@ const { prompt } = Enquirer;
 async function create() {
   log.info("create-l. TypeScript Library Scaffold.", { prefix: "\n" });
 
-  const { projectName, packageName, overwrite, libType, buildTool, packageJson } = await usePrompt();
+  const { projectName, packageName, overwrite, libType, bundleTool, packageJson } = await usePrompt();
 
   const root = join(cwd(), projectName);
   // Ensure dir
@@ -25,7 +25,7 @@ async function create() {
   }
   ensureDirSync(root);
 
-  const templateDir = chooseTemplate(libType, buildTool);
+  const templateDir = chooseTemplate(libType, bundleTool);
 
   copyTemplate(templateDir, root, {
     renameFiles: {
@@ -44,12 +44,12 @@ async function create() {
   // Get package info
   const pkgManager = packageFromUserAgent(env.npm_config_user_agent)?.name || "npm";
 
-  const shouldBump = (await prompt<{ bump: boolean }>({
+  const { bump: shouldBump } = (await prompt<{ bump: boolean }>({
     message: "Bump packages?",
     name: "bump",
     type: "confirm",
     initial: true,
-  })).bump;
+  }));
   if (shouldBump) {
     // bump packages
     log.info("fetching the latest package information...");

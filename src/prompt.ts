@@ -7,6 +7,7 @@ import { default as Enquirer } from "enquirer";
 import { getProjectName, isValidPackageName, toValidPackageName } from "./utils";
 import { log } from "./utils/log";
 import { isEmpty } from "./io";
+import type { BundleTool, TemplateType } from "./types";
 
 const { prompt } = Enquirer;
 
@@ -63,7 +64,7 @@ export async function usePrompt() {
   }
 
   // Library type
-  const { libType } = await prompt<{ libType: string }>({
+  const { libType } = await prompt<{ libType: TemplateType }>({
     message: "What kind of library do you want to build?",
     name: "libType",
     type: "select",
@@ -77,12 +78,12 @@ export async function usePrompt() {
   });
 
   // Build tool
-  let buildTool: "unbuild" | "tsup" | "vite" | undefined;
+  let bundleTool: BundleTool | undefined;
   if (libType === "library") {
-    buildTool = (await prompt<{ buildTool: "unbuild" | "tsup" | "vite" }>({
+    bundleTool = (await prompt<{ buildTool: BundleTool }>({
       type: "select",
       name: "buildTool",
-      message: "Select a build tool",
+      message: "Select a bundle tool",
       choices: ["unbuild", "tsup", "vite"],
     })).buildTool;
   }
@@ -160,7 +161,7 @@ export async function usePrompt() {
     packageName,
     overwrite,
     libType,
-    buildTool,
+    bundleTool,
     packageJson,
   };
 }
