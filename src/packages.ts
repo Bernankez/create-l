@@ -1,4 +1,4 @@
-import { writeFileSync } from "fs";
+import { writeFileSync } from "node:fs";
 import { CheckPackages, dumpDependencies } from "taze";
 
 export async function bumpPackages(cwd: string, recursive = false) {
@@ -17,7 +17,6 @@ export async function checkUpdates(cwd: string, recursive = false) {
     write: false,
     all: false,
     cwd,
-    loglevel: "",
     recursive,
   });
   for (const pkg of packageInfos.packages) {
@@ -43,7 +42,9 @@ export async function checkUpdates(cwd: string, recursive = false) {
 }
 
 export function packageFromUserAgent(userAgent?: string) {
-  if (!userAgent) { return undefined; }
+  if (!userAgent) {
+    return undefined;
+  }
   const pkgSpec = userAgent.split(" ")[0];
   const pkgSpecArr = pkgSpec.split("/");
   return {

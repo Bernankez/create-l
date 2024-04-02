@@ -1,4 +1,7 @@
-import { existsSync } from "fs";
+import { existsSync } from "node:fs";
+
+import { exit } from "node:process";
+// waiting for release https://github.com/enquirer/enquirer/pull/427
 // eslint-disable-next-line import/no-named-default
 import { default as Enquirer } from "enquirer";
 import { getProjectName, isValidPackageName, toValidPackageName } from "./utils";
@@ -10,7 +13,7 @@ const { prompt } = Enquirer;
 // @ts-expect-error no type def
 prompt.on("cancel", () => {
   log.error("Operation cancelled");
-  process.exit();
+  exit();
 });
 
 export async function usePrompt() {
@@ -34,7 +37,7 @@ export async function usePrompt() {
     })).overwrite;
     if (!overwrite) {
       log.error("Operation cancelled");
-      process.exit(0);
+      exit(0);
     }
   }
 
@@ -161,4 +164,3 @@ export async function usePrompt() {
     packageJson,
   };
 }
-

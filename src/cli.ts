@@ -1,13 +1,17 @@
 import { join, relative } from "node:path";
-import { cwd } from "node:process";
-import { emptyDirSync, ensureDirSync } from "fs-extra/esm";
+import { cwd, env } from "node:process";
+import { emptyDirSync, ensureDirSync } from "fs-extra";
 import { pascalCase } from "scule";
-import { prompt } from "enquirer";
+// waiting for release https://github.com/enquirer/enquirer/pull/427
+// eslint-disable-next-line import/no-named-default
+import { default as Enquirer } from "enquirer";
 import { usePrompt } from "./prompt";
 import { log } from "./utils/log";
 import { bumpPackages, packageFromUserAgent } from "./packages";
 import { replacePlaceholder } from "./placeholder";
 import { chooseTemplate, copyTemplate } from "./template";
+
+const { prompt } = Enquirer;
 
 async function create() {
   log.info("create-l. TypeScript Library Scaffold.", { prefix: "\n" });
@@ -38,7 +42,7 @@ async function create() {
   });
 
   // Get package info
-  const pkgManager = packageFromUserAgent(process.env.npm_config_user_agent)?.name || "npm";
+  const pkgManager = packageFromUserAgent(env.npm_config_user_agent)?.name || "npm";
 
   const shouldBump = (await prompt<{ bump: boolean }>({
     message: "Bump packages?",
