@@ -11,5 +11,5 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
   },
-  "exclude": ["template"]
+  "include": ["src", "tsup.config.ts", "vite.config.ts"]
 }

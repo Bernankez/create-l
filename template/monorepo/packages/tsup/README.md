@@ -1,1 +1,0 @@
-# @__project-name__/tsup
