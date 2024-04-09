@@ -2,8 +2,13 @@ export interface TemplateFields {
   repoType: "single";
   overwrite: boolean;
   bundleTool: BundleTool;
-  additionalTools: AdditionalTool[];
+  additionalTools?: AdditionalTool[];
   packageJson?: PackageJson;
+  /**
+   * fetch latest packages
+   * @default true
+   */
+  fetchLatest?: boolean;
   replacement: Replacement;
 };
 

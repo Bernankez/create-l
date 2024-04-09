@@ -41,7 +41,6 @@ export async function loadArgs(argv = process.argv): Promise<TemplateFields> {
       return {
         overwrite: true,
         repoType: "single",
-        additionalTools: [],
         bundleTool,
         replacement: {
           projectName,

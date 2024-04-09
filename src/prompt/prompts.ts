@@ -102,6 +102,16 @@ export async function askAdditionalTools() {
   });
 }
 
+export async function askGitBranchName() {
+  const { gitBranchName } = await prompt<{ gitBranchName: string }>({
+    type: "input",
+    message: "Git main branch name",
+    name: "gitBranchName",
+    initial: "master",
+  });
+  return gitBranchName;
+}
+
 export async function askCustomizePackageJson(options: PackageJsonOptions) {
   const { customize } = await prompt<{ customize: boolean }>({
     type: "confirm",
@@ -134,4 +144,14 @@ export async function askPackageJson(options: PackageJsonOptions) {
     packageJson,
     template: fillPackageJsonTemplate({ ...options, ...packageJson }),
   };
+}
+
+export async function askFetchingLatestPackages() {
+  const { fetchLatest } = await prompt<{ fetchLatest: boolean }>({
+    type: "confirm",
+    message: "Fetch latest packages?",
+    name: "fetchLatest",
+    initial: true,
+  });
+  return fetchLatest;
 }
