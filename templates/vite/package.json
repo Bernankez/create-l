@@ -2,6 +2,7 @@
   "type": "module",
   "version": "0.0.0",
   "packageManager": "pnpm@8.15.6",
+  "homepage": "https://github.com/__githubUsername__/my-lib#readme",
   "keywords": [],
   "sideEffects": false,
   "exports": {
@@ -30,8 +31,8 @@
   "scripts": {
     "prepare": "simple-git-hooks",
     "prepack": "pnpm build",
-    "build": "tsup --format esm,cjs --clean --dts",
-    "dev": "tsup --format esm,cjs --watch",
+    "build": "vite build",
+    "dev": "vite build --watch",
     "start": "tsx src/index.ts",
     "preview": "node --watch bin/index.js",
     "release": "bumpp && pnpm publish",
@@ -40,9 +41,6 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint . -f mo",
     "fix": "eslint . -f mo --fix"
-  },
-  "dependencies": {
-    "cac": "^6.7.14"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.13.0",
@@ -53,10 +51,10 @@
     "lint-staged": "^15.2.2",
     "rimraf": "^5.0.5",
     "simple-git-hooks": "^2.11.1",
-    "tsup": "^8.0.2",
     "tsx": "^4.7.2",
     "typescript": "^5.4.4",
     "vite": "^5.2.8",
+    "vite-plugin-dts": "^3.8.1",
     "vitest": "^1.4.0"
   },
   "simple-git-hooks": {

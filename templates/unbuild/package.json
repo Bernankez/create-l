@@ -2,7 +2,6 @@
   "type": "module",
   "version": "0.0.0",
   "packageManager": "pnpm@8.15.6",
-  "license": "MIT",
   "keywords": [],
   "sideEffects": false,
   "exports": {
@@ -31,8 +30,8 @@
   "scripts": {
     "prepare": "simple-git-hooks",
     "prepack": "pnpm build",
-    "dev": "unbuild --stub",
     "build": "unbuild",
+    "dev": "unbuild --stub",
     "start": "tsx src/index.ts",
     "preview": "node --watch bin/index.js",
     "release": "bumpp && pnpm publish",
