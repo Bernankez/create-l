@@ -3,9 +3,13 @@ import { resolve } from "node:path";
 import type { Replacement } from "../types";
 
 const GIT_BRANCH_NAME = "__gitBranchName__";
+const PROJECT_NAME = "__projectName__";
+const PACKAGE_NAME = "__packageName__";
 
 export function replacePlaceholder(root: string, keys: Replacement) {
-  const { gitBranchName } = keys;
+  const { projectName, packageName, gitBranchName } = keys;
+  replaceWords(root, new RegExp(PROJECT_NAME, "g"), projectName);
+  replaceWords(root, new RegExp(PACKAGE_NAME, "g"), packageName);
   if (gitBranchName) {
     replaceWords(root, new RegExp(GIT_BRANCH_NAME, "g"), gitBranchName);
   }
