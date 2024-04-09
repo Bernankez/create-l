@@ -62,7 +62,7 @@ export async function askPackageName(projectName?: string) {
 }
 
 export async function askBundleTool() {
-  const { bundleTool } = await prompt<{ bundleTool: string }>({
+  const { bundleTool } = await prompt<{ bundleTool: BundleTool }>({
     type: "select",
     message: "Bundle tool",
     name: "bundleTool",
@@ -70,14 +70,10 @@ export async function askBundleTool() {
       { message: "unbuild", name: "unbuild" },
       { message: "tsup", name: "tsup" },
       { message: "vite", name: "vite" },
-      { message: "Vue SFC", name: "Vue SFC" },
     ],
     required: true,
   });
-  if (bundleTool === "Vue SFC") {
-    return "sfc";
-  }
-  return bundleTool as BundleTool;
+  return bundleTool;
 }
 
 export async function askAdditionalTools() {

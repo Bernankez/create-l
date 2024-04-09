@@ -12,7 +12,7 @@ export interface TemplateFields {
   replacement: Replacement;
 };
 
-export type BundleTool = "unbuild" | "tsup" | "vite" | "sfc";
+export type BundleTool = "unbuild" | "tsup" | "vite";
 
 export type AdditionalTool = "githubAction";
 
