@@ -14,7 +14,7 @@ export async function loadArgs(argv = process.argv): Promise<TemplateFields> {
     .version(version)
     .usage("[options]")
     .option("-n, --name <name>", "Project name")
-    .option("-b, --bundle <unbuild | tsup | vite>", "Bundle tool")
+    .option("-b, --bundle <unbuild | tsup | vite | sfc>", "Bundle tool")
     .help();
   const result = cli.parse(argv);
   const options = result.options;

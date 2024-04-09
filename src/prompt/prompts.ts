@@ -2,9 +2,11 @@ import { existsSync } from "node:fs";
 // waiting for release https://github.com/enquirer/enquirer/pull/427
 // eslint-disable-next-line import/no-named-default
 import { default as Enquirer } from "enquirer";
+import type { RequiredSome } from "@bernankez/utils";
 import { getProjectName, isValidPackageName, toValidPackageName, toValidProjectName } from "../utils/normalize";
 import { isEmpty } from "../utils/io";
-import type { AdditionalTool, BundleTool, PackageJson } from "../types";
+import type { AdditionalTool, BundleTool } from "../types";
+import { type PackageJsonOptions, fillPackageJsonTemplate, generatePackageJsonTemplate } from "../template";
 
 const { prompt } = Enquirer;
 
@@ -40,20 +42,6 @@ export async function askOverwrite(origin: string) {
   };
 }
 
-export async function askRepoType() {
-  const { repoType } = await prompt<{ repoType: "Single repo" | "Monorepo" }>({
-    type: "select",
-    message: "Single repo or monorepo?",
-    name: "repoType",
-    choices: [
-      { message: "Single repo", name: "Single repo" },
-      { message: "Monorepo", name: "Monorepo" },
-    ],
-    required: true,
-  });
-  return repoType === "Single repo" ? "single" : "mono";
-}
-
 export async function askPackageName(projectName?: string) {
   if (projectName && isValidPackageName(projectName)) {
     return projectName;
@@ -74,7 +62,7 @@ export async function askPackageName(projectName?: string) {
 }
 
 export async function askBundleTool() {
-  const { bundleTool } = await prompt<{ bundleTool: BundleTool }>({
+  const { bundleTool } = await prompt<{ bundleTool: string }>({
     type: "select",
     message: "Bundle tool",
     name: "bundleTool",
@@ -82,10 +70,14 @@ export async function askBundleTool() {
       { message: "unbuild", name: "unbuild" },
       { message: "tsup", name: "tsup" },
       { message: "vite", name: "vite" },
+      { message: "Vue SFC", name: "Vue SFC" },
     ],
     required: true,
   });
-  return bundleTool;
+  if (bundleTool === "Vue SFC") {
+    return "sfc";
+  }
+  return bundleTool as BundleTool;
 }
 
 export async function askAdditionalTools() {
@@ -95,32 +87,51 @@ export async function askAdditionalTools() {
     name: "tools",
     choices: [
       { message: "GitHub Action", name: "GitHub Action" },
+      { message: "Node CLI", name: "Node CLI" },
     ],
   });
   return tools.map<AdditionalTool>((tool) => {
     switch (tool) {
       case "GitHub Action":
         return "githubAction";
+      case "Node CLI":
+        return "cli";
       default:
         return tool as AdditionalTool;
     }
   });
 }
 
-export async function askCustomizePackageJson() {
+export async function askCustomizePackageJson(options: PackageJsonOptions) {
   const { customize } = await prompt<{ customize: boolean }>({
     type: "confirm",
     message: "Customize package.json?",
     name: "customize",
-    initial: false,
+    initial: true,
   });
   if (customize) {
-    return await askPackageJson();
+    return await askPackageJson(options);
   }
   return undefined;
 }
 
-export async function askPackageJson(): Promise<PackageJson> {
-  // TODO: implement
-  return {} as any;
+export async function askPackageJson(options: PackageJsonOptions) {
+  const { template, fields } = generatePackageJsonTemplate(options);
+  const packageJson = (await prompt<{
+    packageJson: {
+      values: RequiredSome<Record<typeof fields[number]["name"], string>, "projectName" | "packageName" | "version"> ;
+      result: string;
+    };
+  }>({
+    type: "snippet",
+    message: "Fill out the fields in package.json",
+    name: "packageJson",
+    template: JSON.stringify(template, null, 2),
+    // @ts-expect-error no type def
+    fields,
+  })).packageJson.values;
+  return {
+    packageJson,
+    template: fillPackageJsonTemplate({ ...options, ...packageJson }),
+  };
 }

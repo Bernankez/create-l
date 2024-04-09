@@ -1,28 +1,24 @@
-export type TemplateFields = SingleRepoFields | MonorepoFields;
-
-export interface SingleRepoFields {
+export interface TemplateFields {
   repoType: "single";
   overwrite: boolean;
   bundleTool: BundleTool;
   additionalTools: AdditionalTool[];
+  packageJson?: PackageJson;
   replacement: Replacement;
-}
+};
 
-export interface MonorepoFields {
-  repoType: "mono";
-  overwrite: boolean;
-  githubAction: boolean;
-}
+export type BundleTool = "unbuild" | "tsup" | "vite" | "sfc";
 
-export type RepoType = "mono" | "single";
-
-export type BundleTool = "unbuild" | "tsup" | "vite";
-
-export type AdditionalTool = "githubAction";
+export type AdditionalTool = "githubAction" | "cli";
 
 export interface Replacement {
   projectName: string;
   packageName: string;
+  version?: string;
+  description?: string;
+  authorName?: string;
+  authorEmail?: string;
+  githubUsername?: string;
   gitBranchName?: string;
 }
 
