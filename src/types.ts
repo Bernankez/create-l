@@ -1,5 +1,4 @@
 export interface TemplateFields {
-  repoType: "single";
   overwrite: boolean;
   bundleTool: BundleTool;
   additionalTools?: AdditionalTool[];
