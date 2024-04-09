@@ -14,7 +14,7 @@ export interface TemplateFields {
 
 export type BundleTool = "unbuild" | "tsup" | "vite" | "sfc";
 
-export type AdditionalTool = "githubAction" | "cli";
+export type AdditionalTool = "githubAction";
 
 export interface Replacement {
   projectName: string;

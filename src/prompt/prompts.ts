@@ -87,15 +87,12 @@ export async function askAdditionalTools() {
     name: "tools",
     choices: [
       { message: "GitHub Action", name: "GitHub Action" },
-      { message: "Node CLI", name: "Node CLI" },
     ],
   });
   return tools.map<AdditionalTool>((tool) => {
     switch (tool) {
       case "GitHub Action":
         return "githubAction";
-      case "Node CLI":
-        return "cli";
       default:
         return tool as AdditionalTool;
     }
