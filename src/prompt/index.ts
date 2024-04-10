@@ -24,7 +24,6 @@ export async function loadPrompts(): Promise<TemplateFields> {
   });
   const fetchLatest = await askFetchingLatestPackages();
   return {
-    repoType: "single",
     overwrite,
     bundleTool,
     additionalTools,

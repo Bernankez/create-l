@@ -40,7 +40,6 @@ export async function loadArgs(argv = process.argv): Promise<TemplateFields> {
       const packageName = isValidPackageName(projectName) ? projectName : toValidPackageName(projectName);
       return {
         overwrite: true,
-        repoType: "single",
         bundleTool,
         replacement: {
           projectName,

@@ -1,10 +1,17 @@
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import type { Replacement } from "../types";
+import { readJsonSync, writeJsonSync } from "fs-extra/esm";
+import type { PackageJson, Replacement } from "../types";
 
 const GIT_BRANCH_NAME = "__gitBranchName__";
 const PROJECT_NAME = "__projectName__";
 const PACKAGE_NAME = "__packageName__";
+
+export function replacePackageJson(dest: string, packageJson: PackageJson) {
+  const content = readJsonSync(dest);
+  const res = { ...content, ...packageJson };
+  writeJsonSync(dest, res, { spaces: 2 });
+}
 
 export function replacePlaceholder(root: string, keys: Replacement) {
   const { projectName, packageName, gitBranchName } = keys;

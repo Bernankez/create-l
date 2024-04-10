@@ -3,11 +3,11 @@ name: CI
 on:
   push:
     branches:
-      - __branchName__
+      - __gitBranchName__
 
   pull_request:
     branches:
-      - __branchName__
+      - __gitBranchName__
 
 jobs:
   lint:
