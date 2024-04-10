@@ -11,5 +11,5 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
   },
-  "include": ["src", "tsup.config.ts", "vite.config.ts"]
+  "include": ["src", "tsup.config.ts", "cjs-shims.ts", "vite.config.ts"]
 }
