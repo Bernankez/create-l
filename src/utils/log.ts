@@ -12,7 +12,7 @@ function log(str = "", options: LogOption = {}) {
 
 log.success = (str = "", options: LogOption = {}) => {
   const { prefix = "" } = options;
-  console.log(chalk.green(`${prefix}✔️ ${str}`));
+  console.log(chalk.green(`${prefix}✔ ${str}`));
 };
 log.error = (str = "", options: LogOption = {}) => {
   const { prefix = "" } = options;
