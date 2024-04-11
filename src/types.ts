@@ -18,6 +18,7 @@ export type AdditionalTool = "githubAction";
 export interface Replacement {
   projectName: string;
   packageName: string;
+  packageManager?: string;
   version?: string;
   description?: string;
   authorName?: string;

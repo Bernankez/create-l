@@ -49,13 +49,16 @@ async function run() {
   if (packageJson) {
     fillPackageJson(resolve(targetDir, "package.json"), packageJson);
   }
-  // replace placeholder
-  replacePlaceholder(targetDir, replacement);
   // set package manager
   const pkgManager = packageFromUserAgent(env.npm_config_user_agent)?.name || "npm";
   const { name, version } = await resolvePackage(pkgManager);
   fillPackageJson(resolve(targetDir, "package.json"), {
     packageManager: `${name}@${version}`,
+  });
+  // replace placeholder
+  replacePlaceholder(targetDir, {
+    ...replacement,
+    packageManager: name,
   });
   // fetch latest packages
   if (fetchLatest) {
