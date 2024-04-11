@@ -15,8 +15,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
 
       - name: Set node
         uses: actions/setup-node@v3
@@ -37,8 +37,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
 
       - name: Set node
         uses: actions/setup-node@v3
@@ -66,8 +66,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
 
       - name: Set node ${{ matrix.node }}
         uses: actions/setup-node@v3
