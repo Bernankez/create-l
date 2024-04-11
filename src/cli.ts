@@ -5,7 +5,7 @@ import { emptyDirSync, ensureDirSync } from "fs-extra/esm";
 import chalk from "chalk";
 import { loadArgs } from "./load";
 import { copyAssetSync } from "./utils/io";
-import { replacePackageJson, replacePlaceholder } from "./template/replacement";
+import { replacePlaceholder } from "./template/replacement";
 import { log } from "./utils/log";
 import { bumpPackages, packageFromUserAgent } from "./bump";
 import { fillPackageJson, resolvePackage, sortPackageJson } from "./template";
@@ -47,7 +47,7 @@ async function run() {
   });
   // assign package json
   if (packageJson) {
-    replacePackageJson(resolve(targetDir, "package.json"), packageJson);
+    fillPackageJson(resolve(targetDir, "package.json"), packageJson);
   }
   // replace placeholder
   replacePlaceholder(targetDir, replacement);
