@@ -1,4 +1,5 @@
 import { existsSync } from "node:fs";
+import process from "node:process";
 // waiting for release https://github.com/enquirer/enquirer/pull/427
 // eslint-disable-next-line import/no-named-default
 import { default as Enquirer } from "enquirer";
@@ -7,8 +8,15 @@ import { getProjectName, isValidPackageName, toValidPackageName, toValidProjectN
 import { isEmpty } from "../utils/io";
 import type { AdditionalTool, BundleTool } from "../types";
 import { type PackageJsonOptions, fillPackageJsonTemplate, generatePackageJsonTemplate } from "../template";
+import { log } from "../utils/log";
 
 const { prompt } = Enquirer;
+
+// @ts-expect-error no type def
+prompt.on("cancel", () => {
+  log.error("Operation canceled.\n");
+  process.exit(0);
+});
 
 export async function askProjectName() {
   const { projectName } = await prompt<{ projectName: string }>({
