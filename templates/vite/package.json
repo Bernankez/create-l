@@ -42,9 +42,9 @@
     "fix": "eslint . -f mo --fix"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.13.0",
+    "@antfu/eslint-config": "^2.13.3",
     "@antfu/ni": "^0.21.12",
-    "@types/node": "^20.12.6",
+    "@types/node": "^20.12.7",
     "bumpp": "^9.4.0",
     "eslint": "^9.0.0",
     "eslint-formatter-mo": "^1.2.0",
@@ -52,7 +52,7 @@
     "rimraf": "^5.0.5",
     "simple-git-hooks": "^2.11.1",
     "tsx": "^4.7.2",
-    "typescript": "^5.4.4",
+    "typescript": "^5.4.5",
     "vite": "^5.2.8",
     "vite-plugin-dts": "^3.8.1",
     "vitest": "^1.4.0"

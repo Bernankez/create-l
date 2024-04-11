@@ -1,7 +1,7 @@
 import { relative, resolve } from "node:path";
 import process, { cwd, env } from "node:process";
 import { resolvePath } from "@bernankez/utils/node";
-import { emptyDirSync, ensureDirSync, readJsonSync } from "fs-extra/esm";
+import { emptyDirSync, ensureDirSync } from "fs-extra/esm";
 import chalk from "chalk";
 import { loadArgs } from "./load";
 import { copyAssetSync } from "./utils/io";
