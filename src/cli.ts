@@ -1,79 +1,88 @@
-import { join, relative } from "node:path";
-import { cwd, env } from "node:process";
+import { relative, resolve } from "node:path";
+import process, { cwd, env } from "node:process";
+import { resolvePath } from "@bernankez/utils/node";
 import { emptyDirSync, ensureDirSync } from "fs-extra/esm";
-import { pascalCase } from "scule";
-// waiting for release https://github.com/enquirer/enquirer/pull/427
-// eslint-disable-next-line import/no-named-default
-import { default as Enquirer } from "enquirer";
-import { usePrompt } from "./prompt";
+import chalk from "chalk";
+import { loadArgs } from "./load";
+import { copyAssetSync } from "./utils/io";
+import { replacePlaceholder } from "./template/replacement";
 import { log } from "./utils/log";
-import { bumpPackages, packageFromUserAgent } from "./packages";
-import { replacePlaceholder } from "./placeholder";
-import { chooseTemplate, copyTemplate } from "./template";
+import { bumpPackages, packageFromUserAgent } from "./bump";
+import { fillPackageJson, resolvePackage, sortPackageJson } from "./template";
 
-const { prompt } = Enquirer;
-
-async function create() {
-  log.info("create-l. TypeScript Library Scaffold.", { prefix: "\n" });
-
-  const { projectName, packageName, overwrite, libType, bundleTool, packageJson } = await usePrompt();
-
-  const root = join(cwd(), projectName);
-  // Ensure dir
+async function run() {
+  log.info(`${chalk.bgBlue(" create-l ")} TypeScript library scaffold`, { prefix: "\n" });
+  // resolve args
+  const args = await loadArgs();
+  const { overwrite, bundleTool, replacement, packageJson, additionalTools, fetchLatest } = args;
+  const { projectName } = replacement;
+  const { __dirname } = resolvePath(import.meta.url);
+  const assetsDir = resolve(__dirname, "../templates/_common");
+  const templateDir = resolve(__dirname, "../templates", bundleTool);
+  const targetDir = resolve(process.cwd(), projectName);
+  log.info("Copying templates...");
   if (overwrite) {
-    emptyDirSync(root);
+    emptyDirSync(targetDir);
   }
-  ensureDirSync(root);
-
-  const templateDir = chooseTemplate(libType, bundleTool);
-
-  copyTemplate(templateDir, root, {
+  ensureDirSync(targetDir);
+  const ignores = new Set([".github"]);
+  if (additionalTools?.includes("githubAction")) {
+    ignores.delete(".github");
+  }
+  // copy templates
+  copyAssetSync(templateDir, targetDir, {
+    overwrite: true,
     renameFiles: {
       _gitignore: ".gitignore",
     },
+    ignoreFiles: [...ignores],
   });
-
-  // replace placeholder
-  replacePlaceholder(root, {
-    projectName,
-    packageName,
-    libraryName: pascalCase(packageName),
-    packageJson,
+  // copy common assets
+  copyAssetSync(assetsDir, targetDir, {
+    overwrite: false,
+    renameFiles: {
+      _gitignore: ".gitignore",
+    },
+    ignoreFiles: [...ignores],
   });
-
-  // Get package info
-  const pkgManager = packageFromUserAgent(env.npm_config_user_agent)?.name || "npm";
-
-  const { bump: shouldBump } = (await prompt<{ bump: boolean }>({
-    message: "Bump packages?",
-    name: "bump",
-    type: "confirm",
-    initial: true,
-  }));
-  if (shouldBump) {
-    // bump packages
-    log.info("fetching the latest package information...");
-    await bumpPackages(root, libType === "monorepo");
+  // assign package json
+  if (packageJson) {
+    fillPackageJson(resolve(targetDir, "package.json"), packageJson);
   }
-
-  const cdProjectName = relative(cwd(), root);
+  // set package manager
+  const pkgManager = packageFromUserAgent(env.npm_config_user_agent)?.name || "npm";
+  const { name, version } = await resolvePackage(pkgManager);
+  fillPackageJson(resolve(targetDir, "package.json"), {
+    packageManager: `${name}@${version}`,
+  });
+  // replace placeholder
+  replacePlaceholder(targetDir, {
+    ...replacement,
+    packageManager: name,
+  });
+  // fetch latest packages
+  if (fetchLatest) {
+    log.info("Fetching latest packages...");
+    await bumpPackages(targetDir, false);
+  }
+  // sort package json
+  sortPackageJson(resolve(targetDir, "package.json"));
+  // log hint
   let cd = "";
-  if (root !== cwd()) {
-    cd = `cd ${
-        cdProjectName.includes(" ") ? `"${cdProjectName}"` : cdProjectName
-      }\n`;
+  if (targetDir !== cwd()) {
+    const cdProjectName = relative(cwd(), targetDir);
+    cd = `  cd ${cdProjectName.includes(" ") ? `"${cdProjectName}"` : cdProjectName}\n`;
   }
   let hint = "";
   switch (pkgManager) {
     case "yarn":
-      hint = "yarn\n  yarn dev";
+      hint = "  yarn\n  yarn dev\n  yarn preview";
       break;
     default:
-      hint = `${pkgManager} install\n${pkgManager} run dev`;
+      hint = `  ${pkgManager} install\n  ${pkgManager} run dev\n  ${pkgManager} run preview`;
       break;
   }
-
-  log.success(`Done. Now run:\n\n${cd}${hint}`, { prefix: "\n" });
+  log.success(`Done. Now run:\n${cd}${hint}`, { prefix: "\n" });
 }
 
-create();
+run();

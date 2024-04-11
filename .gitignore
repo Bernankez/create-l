@@ -8,4 +8,8 @@ dist
 lib-cov
 logs
 node_modules
-temp
+
+templates/*/bun.lockb
+templates/*/yarn.lock
+templates/*/package-lock.json
+template/*/pnpm-lock.yaml

@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2020",
     "lib": ["ESNext"],
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "Node",
     "resolveJsonModule": true,
     "strict": true,
     "strictNullChecks": true,
@@ -11,5 +11,5 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
   },
-  "include": ["src", "scripts", "test", "tsup.config.ts", "cjs-shims.ts", "vite.config.ts"]
+  "include": ["src", "test", "build.config.ts"]
 }
