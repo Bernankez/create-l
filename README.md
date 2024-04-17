@@ -37,7 +37,7 @@ Currently supported template presets include:
 - tsup
 - vite
 
-You can use . for the project name to scaffold in the current directory.
+You can use `.` for the project name to scaffold in the current directory.
 
 > [!IMPORTANT]
 > Since v2.0.0, `monorepo` and `Vue SFC` templates have been removed. If you still have a need to use them, you can use cli with `legacy` tag
