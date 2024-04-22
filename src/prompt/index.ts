@@ -31,9 +31,10 @@ export async function loadPrompts(): Promise<TemplateFields> {
     packageJson: customizePackageJson?.template,
     replacement: {
       projectName,
-      packageName,
       gitBranchName,
       ...customizePackageJson?.packageJson,
+      /** Should use origin packageName instead of packageJson.packageName */
+      packageName,
     },
   };
 }

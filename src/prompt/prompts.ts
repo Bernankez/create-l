@@ -143,6 +143,7 @@ export async function askPackageJson(options: PackageJsonOptions) {
   })).packageJson.values;
   return {
     packageJson,
+    /** Filled package json template */
     template: fillPackageJsonTemplate({ ...options, ...packageJson }),
   };
 }
