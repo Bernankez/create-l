@@ -58,7 +58,7 @@
     "vitest": "^1.4.0"
   },
   "simple-git-hooks": {
-    "pre-commit": "nr lint-staged"
+    "pre-commit": "nlx lint-staged"
   },
   "lint-staged": {
     "*": "eslint --fix"
