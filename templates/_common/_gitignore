@@ -76,3 +76,6 @@ dist
 
 # IDE
 .idea
+
+# Mac
+.DS_Store
