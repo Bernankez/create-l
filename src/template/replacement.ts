@@ -19,9 +19,9 @@ export function replacePlaceholder(root: string, keys: Replacement) {
     replaceWords(root, createReplaceFn(new RegExp(PACKAGE_MANAGER, "g"), packageManager));
     let packageManagerAction = "";
     if (packageManager === "pnpm") {
-      packageManagerAction = "pnpm/action-setup@v2";
+      packageManagerAction = "pnpm/action-setup@v4";
     } else if (packageManager === "bun") {
-      packageManagerAction = "oven-sh/setup-bun@v1";
+      packageManagerAction = "oven-sh/setup-bun@v2";
     }
     if (packageManagerAction) {
       replaceWords(root, createReplaceFn(new RegExp(PACKAGE_MANAGER_ACTION, "g"), packageManagerAction));
