@@ -1,20 +1,14 @@
 <script setup lang="ts">
 import { nextTick, ref, watch } from "vue";
-import "@xterm/xterm/css/xterm.css";
-import HelloWorld from "./components/HelloWorld.vue";
+import Simulator from "./components/Simulator.vue";
 import { useTerminal } from "./composables/useTerminal";
 import { useWebContainer } from "./composables/useWebcontainer";
 
 const terminalElRef = ref<HTMLDivElement>();
 const terminal = useTerminal(terminalElRef, {
   convertEol: true,
-  cursorStyle: "block",
-  cursorBlink: true,
   cursorInactiveStyle: "none",
   fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-  theme: {
-    background: "#2e3440",
-  },
 });
 
 const { webContainer, status } = useWebContainer();
@@ -30,12 +24,8 @@ const files = {
           "version": "0.0.0",
           "type": "module",
           "scripts": {
-            "dev": "vite",
-            "build": "vite build",
-            "preview": "vite preview"
           },
           "devDependencies": {
-            "vite": "^4.0.4"
           }
         }`,
     },
@@ -61,7 +51,13 @@ const stop = watch(webContainer, async (webContainer) => {
   if (webContainer) {
     nextTick(() => stop());
     await webContainer.mount(files);
-    const shellProcess = await webContainer.spawn("npm", ["install"], {
+    let shellProcess = await webContainer.spawn("npm", ["install"], {
+      terminal: {
+        cols: terminal.value!.cols,
+        rows: terminal.value!.rows,
+      },
+    });
+    shellProcess = await webContainer.spawn("node", ["--version"], {
       terminal: {
         cols: terminal.value!.cols,
         rows: terminal.value!.rows,
@@ -77,7 +73,10 @@ const stop = watch(webContainer, async (webContainer) => {
 </script>
 
 <template>
-  <div>
+  <Simulator :title="status" value-class="pr-0" class="bg-#333">
+    <div ref="terminalElRef" class="terminal"></div>
+  </Simulator>
+  <!-- <div>
     <a href="https://vitejs.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
     </a>
@@ -85,22 +84,30 @@ const stop = watch(webContainer, async (webContainer) => {
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <HelloWorld msg="Vite + Vue" />
+  <HelloWorld msg="Vite + Vue" /> -->
   <div>{{ status }}</div>
-  <div ref="terminalElRef" class="h-15.5rem w-full bg-gray overflow-auto"></div>
+  <!-- <div ref="terminalElRef" class="h-15.5rem w-full overflow-auto bg-gray"></div> -->
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+:deep(.xterm-viewport) {
+  background-color: transparent !important;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+:deep(.xterm-viewport)::-webkit-scrollbar {
+  width: 13px;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+:deep(.xterm-viewport)::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+:deep(.xterm-viewport)::-webkit-scrollbar-thumb {
+  background-color: #79797966;
+  border-radius: 3px;
+}
+
+:deep(.xterm-viewport)::-webkit-scrollbar-thumb:hover {
+  background-color: #797979;
 }
 </style>
