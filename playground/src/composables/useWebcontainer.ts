@@ -1,3 +1,4 @@
+import type { Awaitable } from "@vueuse/core";
 import { WebContainer } from "@webcontainer/api";
 import { onScopeDispose, ref, shallowRef } from "vue";
 
@@ -8,8 +9,15 @@ export function destroyCurrentWebContainer() {
   currentWebContainer.value = undefined;
 }
 
-export function useWebContainer(immediate = true) {
+export interface UseWebContainerOptions {
+  /** Init immediately, defaults to true */
+  immediate?: boolean;
+  onBooted?: (webContainer: WebContainer) => Awaitable<void>;
+}
+
+export function useWebContainer(options?: UseWebContainerOptions) {
   const status = ref<"uninitialized" | "booted" | "destroyed">("uninitialized");
+  const { immediate = true, onBooted } = options || {};
 
   // WebContainer must be singleton
   const webContainer = shallowRef<WebContainer>();
@@ -25,7 +33,9 @@ export function useWebContainer(immediate = true) {
       console.error("A WebContainer instance has been booted, new instance cannot be created until the current instance is destroyed");
       return;
     }
-    webContainer.value = await WebContainer.boot();
+    const _webContainer = await WebContainer.boot();
+    await onBooted?.(_webContainer);
+    webContainer.value = _webContainer;
     status.value = "booted";
     currentWebContainer.value = webContainer.value;
   }

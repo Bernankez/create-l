@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { nextTick, ref, watch } from "vue";
+import { useEventListener } from "@vueuse/core";
 import Simulator from "./components/Simulator.vue";
 import { useTerminal } from "./composables/useTerminal";
 import { useWebContainer } from "./composables/useWebcontainer";
@@ -7,11 +8,10 @@ import { useWebContainer } from "./composables/useWebcontainer";
 const terminalElRef = ref<HTMLDivElement>();
 const terminal = useTerminal(terminalElRef, {
   convertEol: true,
-  cursorInactiveStyle: "none",
+  cursorInactiveStyle: "outline",
+  cursorBlink: true,
   fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
 });
-
-const { webContainer, status } = useWebContainer();
 
 const files = {
   // 这是一个文件，package.json 是文件名
@@ -47,46 +47,47 @@ const files = {
   },
 };
 
-const stop = watch(webContainer, async (webContainer) => {
-  if (webContainer) {
-    nextTick(() => stop());
+const { webContainer, status } = useWebContainer({
+  async onBooted(webContainer) {
     await webContainer.mount(files);
-    let shellProcess = await webContainer.spawn("npm", ["install"], {
-      terminal: {
-        cols: terminal.value!.cols,
-        rows: terminal.value!.rows,
-      },
-    });
-    shellProcess = await webContainer.spawn("node", ["--version"], {
-      terminal: {
-        cols: terminal.value!.cols,
-        rows: terminal.value!.rows,
-      },
-    });
-    shellProcess.output.pipeTo(new WritableStream({
-      write(data) {
-        terminal.value?.write(data);
-      },
-    }));
+  },
+});
+
+const stop = watch([webContainer, terminal], async ([webContainer, terminal]) => {
+  async function init() {
+    if (webContainer && terminal) {
+      nextTick(() => stop());
+      const shellProcess = await webContainer.spawn("pnpm", ["create", "l"], {
+        terminal: {
+          cols: terminal.cols,
+          rows: terminal.rows,
+        },
+      });
+      shellProcess.output.pipeTo(new WritableStream({
+        write: (data) => {
+          terminal.write(data);
+        },
+      }));
+      const inputStream = shellProcess.input.getWriter();
+      terminal.onData((data) => {
+        inputStream.write(data);
+      });
+      useEventListener(window, "resize", () => {
+        shellProcess.resize({
+          cols: terminal.cols,
+          rows: terminal.rows,
+        });
+      });
+    }
   }
+  init();
 }, { immediate: true });
 </script>
 
 <template>
-  <Simulator :title="status" value-class="pr-0" class="bg-#333">
-    <div ref="terminalElRef" class="terminal"></div>
+  <Simulator :window="false" value-class="pr-0" class="grid box-border min-h-full w-full bg-#333">
+    <div ref="terminalElRef" class="h-full"></div>
   </Simulator>
-  <!-- <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" /> -->
-  <div>{{ status }}</div>
-  <!-- <div ref="terminalElRef" class="h-15.5rem w-full overflow-auto bg-gray"></div> -->
 </template>
 
 <style scoped>
