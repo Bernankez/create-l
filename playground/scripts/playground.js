@@ -10489,7 +10489,8 @@ async function playground() {
 `;
   }
   log.success(`Done.`, { prefix: "\n" });
-  log.info(`Now you can run \`${pkgManager} create l\` in your terminal for an instant live experience!`, { prefix: "\n" });
+  log.info(`Now you can run \`${pkgManager} create l\` in your terminal for an instant live experience!
+`, { prefix: "\n" });
 }
 playground();
 /*! Bundled license information:

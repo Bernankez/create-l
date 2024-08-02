@@ -74,6 +74,24 @@ async function init(webContainer: WebContainer, terminal: Terminal) {
   terminal.onData((data) => {
     inputStream.write(data);
   });
+  await shellProcess.exit;
+  // TODO packagejson script
+  // TODO refactor
+  const jshProcess = await webContainer.spawn("jsh", {
+    terminal: {
+      cols: terminal.cols,
+      rows: terminal.rows,
+    },
+  });
+  jshProcess.output.pipeTo(new WritableStream({
+    write: (data) => {
+      terminal.write(data);
+    },
+  }));
+  const jshInputStream = jshProcess.input.getWriter();
+  terminal.onData((data) => {
+    jshInputStream.write(data);
+  });
   useEventListener(window, "resize", () => {
     shellProcess.resize({
       cols: terminal.cols,
@@ -91,7 +109,7 @@ const stop = watch([webContainer, terminal], async ([webContainer, terminal]) =>
 </script>
 
 <template>
-  <Simulator :window="false" value-class="pr-0" class="grid box-border min-h-full w-full bg-#333">
+  <Simulator :window="false" value-class="pr-0" class="grid box-border min-h-full w-full bg-#333333">
     <div ref="terminalElRef" class="h-full"></div>
   </Simulator>
 </template>

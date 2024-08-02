@@ -46,7 +46,7 @@ async function playground() {
       break;
   }
   log.success(`Done.`, { prefix: "\n" });
-  log.info(`Now you can run \`${pkgManager} create l\` in your terminal for an instant live experience!`, { prefix: "\n" });
+  log.info(`Now you can run \`${pkgManager} create l\` in your terminal for an instant live experience!\n`, { prefix: "\n" });
 }
 
 playground();
