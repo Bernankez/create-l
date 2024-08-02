@@ -1,4 +1,4 @@
-import { type MaybeComputedElementRef, useDebounceFn, useResizeObserver, useThrottleFn } from "@vueuse/core";
+import { type MaybeComputedElementRef, useResizeObserver } from "@vueuse/core";
 import type { ITerminalInitOnlyOptions, ITerminalOptions } from "@xterm/xterm";
 import { Terminal } from "@xterm/xterm";
 import { FitAddon } from "@xterm/addon-fit";

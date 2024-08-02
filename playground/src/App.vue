@@ -1,9 +1,26 @@
 <script setup lang="ts">
 import { nextTick, ref, watch } from "vue";
 import { useEventListener } from "@vueuse/core";
+import { packageJson, playground } from "virtual:playground";
+import type { WebContainer } from "@webcontainer/api";
+import type { Terminal } from "@xterm/xterm";
 import Simulator from "./components/Simulator.vue";
 import { useTerminal } from "./composables/useTerminal";
 import { useWebContainer } from "./composables/useWebcontainer";
+import { loading } from "./utils/terminal";
+
+const files = {
+  "index.js": {
+    file: {
+      contents: playground,
+    },
+  },
+  "package.json": {
+    file: {
+      contents: packageJson,
+    },
+  },
+};
 
 const terminalElRef = ref<HTMLDivElement>();
 const terminal = useTerminal(terminalElRef, {
@@ -13,74 +30,63 @@ const terminal = useTerminal(terminalElRef, {
   fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
 });
 
-const files = {
-  // 这是一个文件，package.json 是文件名
-  "package.json": {
-    file: {
-      contents: `
-        {
-          "name": "vite-starter",
-          "private": true,
-          "version": "0.0.0",
-          "type": "module",
-          "scripts": {
-          },
-          "devDependencies": {
-          }
-        }`,
-    },
-  },
-  // 这是一个目录，src 是目录名
-  "src": {
-    // 目录下会有 directory 的属性
-    directory: {
-      // 这是一个文件，叫 mian.js
-      "main.js": {
-        // 文件下有 file 的属性
-        file: {
-          contents: `
-            console.log('Hello from WebContainers!')
-          `,
-        },
-      },
-    },
-  },
-};
-
 const { webContainer, status } = useWebContainer({
   async onBooted(webContainer) {
     await webContainer.mount(files);
   },
 });
 
-const stop = watch([webContainer, terminal], async ([webContainer, terminal]) => {
-  async function init() {
-    if (webContainer && terminal) {
-      nextTick(() => stop());
-      const shellProcess = await webContainer.spawn("pnpm", ["create", "l"], {
-        terminal: {
-          cols: terminal.cols,
-          rows: terminal.rows,
-        },
-      });
-      shellProcess.output.pipeTo(new WritableStream({
-        write: (data) => {
-          terminal.write(data);
-        },
-      }));
-      const inputStream = shellProcess.input.getWriter();
-      terminal.onData((data) => {
-        inputStream.write(data);
-      });
-      useEventListener(window, "resize", () => {
-        shellProcess.resize({
-          cols: terminal.cols,
-          rows: terminal.rows,
-        });
-      });
+function performLoadingState() {
+  let stop: (() => void) | undefined;
+  return watch([terminal, status], ([terminal, status]) => {
+    if (terminal) {
+      switch (status) {
+        case "uninitialized":
+          stop = loading(terminal, "Initializing");
+          break;
+        case "booted":
+          stop?.();
+          break;
+      }
     }
+  }, { immediate: true });
+}
+
+performLoadingState();
+
+async function init(webContainer: WebContainer, terminal: Terminal) {
+  const stop = loading(terminal, "Installing dependencies");
+  const installProcess = await webContainer.spawn("pnpm", ["install"]);
+  await installProcess.exit;
+  stop();
+  const shellProcess = await webContainer.spawn("node", ["index.js"], {
+    terminal: {
+      cols: terminal.cols,
+      rows: terminal.rows,
+    },
+  });
+  shellProcess.output.pipeTo(new WritableStream({
+    write: (data) => {
+      terminal.write(data);
+    },
+  }));
+  const inputStream = shellProcess.input.getWriter();
+  terminal.onData((data) => {
+    inputStream.write(data);
+  });
+  useEventListener(window, "resize", () => {
+    shellProcess.resize({
+      cols: terminal.cols,
+      rows: terminal.rows,
+    });
+  });
+}
+
+const stop = watch([webContainer, terminal], async ([webContainer, terminal]) => {
+  if (webContainer && terminal) {
+    nextTick(() => stop());
+    init(webContainer, terminal);
   }
-  init();
 }, { immediate: true });
 </script>
 
