@@ -3,6 +3,8 @@ import { nextTick, ref, watch } from "vue";
 import { packageJson, playground } from "virtual:playground";
 import type { WebContainer } from "@webcontainer/api";
 import type { Terminal } from "@xterm/xterm";
+// @ts-expect-error no type def
+import { common as xtermTheme } from "xterm-style";
 import Simulator from "./components/Simulator.vue";
 import { useTerminal } from "./composables/useTerminal";
 import { useWebContainer } from "./composables/useWebcontainer";
@@ -28,6 +30,7 @@ const terminal = useTerminal(terminalElRef, {
   cursorInactiveStyle: "outline",
   cursorBlink: true,
   fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+  theme: xtermTheme,
 });
 
 const { webContainer, status } = useWebContainer({
