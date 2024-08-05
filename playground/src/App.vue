@@ -63,6 +63,7 @@ async function init(webContainer: WebContainer, terminal: Terminal) {
   const p1 = await createProcess("pnpm", ["install"], { output: false });
   await p1.exit;
   stop();
+  // TODO directly run `pnpm create l` ?
   const p2 = await createProcess("node", ["index.js"]);
   await p2.exit;
   await createProcess("jsh");
