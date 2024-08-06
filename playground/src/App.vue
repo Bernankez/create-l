@@ -60,6 +60,7 @@ async function init(webContainer: WebContainer, terminal: Terminal) {
   stop();
   const p2 = await createProcess("create-l");
   await p2.exit;
+  terminal.write("Type `pnpm create l` in your terminal to setup your own project!\n");
   await createProcess("jsh");
 }
 
