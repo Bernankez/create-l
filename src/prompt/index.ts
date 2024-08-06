@@ -7,7 +7,7 @@ export async function loadPrompts(): Promise<TemplateFields> {
   const { projectName, origin } = await askProjectName();
   const { overwrite, empty } = await askOverwrite(origin);
   if (!empty && !overwrite) {
-    log.error("Directory not empty, operation cancelled.");
+    log.error("Directory not empty, operation canceled.");
     process.exit(0);
   }
   const packageName = await askPackageName(projectName);

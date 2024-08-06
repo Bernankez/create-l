@@ -13,7 +13,7 @@ import { resolvePackage } from "./template/resolve";
 import { sortPackageJson } from "./template/sort";
 
 async function run() {
-  log.info(`${chalk.bgBlue(chalk.white(" create-l "))} TypeScript library scaffold`, { prefix: "\n" });
+  log.info(`${chalk.bgBlue(chalk.white(" create-l "))} TypeScript library scaffold`);
   // resolve args
   const args = await loadArgs();
   const { overwrite, bundleTool, replacement, packageJson, additionalTools, fetchLatest } = args;
