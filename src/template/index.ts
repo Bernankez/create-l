@@ -2,8 +2,6 @@
 import { writeFileSync } from "node:fs";
 import { n } from "@bernankez/utils";
 import { readJsonSync } from "fs-extra/esm";
-import _sortPackageJson from "sort-package-json";
-import pacote from "pacote";
 import type { PackageJson, Replacement } from "../types";
 
 export interface PackageJsonOptions {
@@ -17,24 +15,10 @@ export interface PromptField {
   initial: string;
 }
 
-export async function resolvePackage(name: string) {
-  const { version } = await pacote.manifest(name);
-  return {
-    name,
-    version,
-  };
-}
-
 export function fillPackageJson(dest: string, obj: Record<string, any>) {
   const packageJson = readJsonSync(dest);
   const filled = { ...packageJson, ...obj };
   writeFileSync(dest, JSON.stringify(filled, null, 2));
-}
-
-export function sortPackageJson(dest: string) {
-  const packageJson = readJsonSync(dest);
-  const sorted = _sortPackageJson(packageJson);
-  writeFileSync(dest, JSON.stringify(sorted, null, 2));
 }
 
 export function fillPackageJsonTemplate(options: Pick<Replacement, "packageName" | "projectName" | "authorEmail" | "authorName" | "description" | "version" | "githubUsername">) {

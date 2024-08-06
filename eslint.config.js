@@ -1,5 +1,9 @@
 import bernankez from "@bernankez/eslint-config";
 
 export default bernankez({
-  ignores: ["templates"],
+  unocss: true,
+  formatters: {
+    css: true,
+  },
+  ignores: ["templates", "**/playground.js"],
 });

@@ -33,7 +33,7 @@ export async function loadArgs(argv = process.argv): Promise<TemplateFields> {
         bundleTool = "unbuild";
       }
       if (existsSync(origin) && !isEmpty(origin)) {
-        log.error("Directory not empty, operation cancelled.");
+        log.error("Directory not empty, operation canceled.");
         process.exit(0);
       }
       const projectName = toValidProjectName(getProjectName(origin));
