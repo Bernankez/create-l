@@ -39,9 +39,6 @@ export function process(webContainer: WebContainer, terminal: Terminal) {
     terminal.onData((data) => {
       inputStream.write(data);
     });
-    webContainer.onProcessesRemove(({ pid }) => {
-      console.log(pid);
-    });
 
     if (output) {
       const stop = useEventListener(window, "resize", () => {
