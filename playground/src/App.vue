@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { nextTick, ref, watch } from "vue";
-import { packageJson, playground } from "virtual:playground";
+import { packageJson } from "virtual:playground";
 import type { WebContainer } from "@webcontainer/api";
 import type { Terminal } from "@xterm/xterm";
 // @ts-expect-error no type def
@@ -12,11 +12,6 @@ import { loading } from "./utils/terminal";
 import { process } from "./utils/webContainer";
 
 const files = {
-  "index.js": {
-    file: {
-      contents: playground,
-    },
-  },
   "package.json": {
     file: {
       contents: packageJson,
@@ -63,8 +58,7 @@ async function init(webContainer: WebContainer, terminal: Terminal) {
   const p1 = await createProcess("pnpm", ["install"], { output: false });
   await p1.exit;
   stop();
-  // TODO directly run `pnpm create l` ?
-  const p2 = await createProcess("node", ["index.js"]);
+  const p2 = await createProcess("create-l");
   await p2.exit;
   await createProcess("jsh");
 }
