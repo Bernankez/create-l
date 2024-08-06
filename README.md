@@ -5,6 +5,8 @@
 
 **TypeScript Library Scaffold.**
 
+Visit https://create-l.keke.cc to get a live preview.
+
 ## Using
 
 ```sh
