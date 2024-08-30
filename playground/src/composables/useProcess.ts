@@ -3,6 +3,11 @@ import type { SpawnOptions, WebContainer, WebContainerProcess } from "@webcontai
 import type { Terminal } from "@xterm/xterm";
 import { type MaybeRefOrGetter, nextTick, toValue, watchEffect } from "vue";
 
+async function kill(process: Awaitable<WebContainerProcess>) {
+  const shellProcess = await process;
+  shellProcess.kill();
+}
+
 export function useProcess(webContainer: MaybeRefOrGetter<WebContainer | undefined | null>, terminal: MaybeRefOrGetter<Terminal | undefined | null>) {
   function spawn(command: string, options?: SpawnOptions): Promise<WebContainerProcess>;
   function spawn(command: string, args: string[], options?: SpawnOptions): Promise<WebContainerProcess>;
@@ -44,11 +49,6 @@ export function useProcess(webContainer: MaybeRefOrGetter<WebContainer | undefin
     });
 
     return promise;
-  }
-
-  async function kill(process: Awaitable<WebContainerProcess>) {
-    const shellProcess = await process;
-    shellProcess.kill();
   }
 
   return {
