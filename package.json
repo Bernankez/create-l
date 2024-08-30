@@ -1,7 +1,7 @@
 {
   "name": "create-l",
   "type": "module",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "packageManager": "bun@1.1.26",
   "description": "TypeScript Library Scaffold.",
   "author": {
