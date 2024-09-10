@@ -6,5 +6,5 @@ export default defineConfig({
     'src/index.ts',
   ],
   shims: true,
-  inject: ['cjs-shims.ts']
+  inject: ['cjs-shims.ts'],
 })
