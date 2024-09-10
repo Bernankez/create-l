@@ -11,5 +11,5 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
   },
-  "include": ["src", "scripts", "test", "tsup.config.ts", "cjs-shims.ts", "vite.config.ts"]
+  "include": ["src", "scripts", "test", "tsup.config.ts", "cjs-shims.ts", "vitest.config.ts"]
 }
