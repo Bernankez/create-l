@@ -1,7 +1,7 @@
 import { constants, copyFileSync, existsSync, mkdirSync, readdirSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 
-export function isEmpty(path: string) {
+export function isEmpty(path: string): boolean {
   const files = readdirSync(path);
   return files.length === 0 || (files.length === 1 && files[0] === ".git");
 }
@@ -12,7 +12,7 @@ export interface CopyAssetOptions {
   ignoreFiles?: string[];
 }
 
-export function copyAssetSync(src: string, dest: string, options?: CopyAssetOptions) {
+export function copyAssetSync(src: string, dest: string, options?: CopyAssetOptions): void {
   const { overwrite = true, renameFiles = {}, ignoreFiles = [] } = options || {};
   for (const file of readdirSync(src)) {
     const srcFile = resolve(src, file);
@@ -24,7 +24,7 @@ export function copyAssetSync(src: string, dest: string, options?: CopyAssetOpti
   }
 }
 
-export function copySync(src: string, dest: string, overwrite = true) {
+export function copySync(src: string, dest: string, overwrite = true): void {
   const stat = statSync(src);
   if (stat.isDirectory()) {
     copyDirSync(src, dest, overwrite);
@@ -33,7 +33,7 @@ export function copySync(src: string, dest: string, overwrite = true) {
   }
 }
 
-export function copyDirSync(src: string, dest: string, overwrite = true) {
+export function copyDirSync(src: string, dest: string, overwrite = true): void {
   if (existsSync(dest) && !isEmpty(dest) && !overwrite) {
     return;
   }

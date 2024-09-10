@@ -1,7 +1,7 @@
+import { type MaybeRefOrGetter, nextTick, toValue, watchEffect } from "vue";
 import type { Awaitable } from "@vueuse/core";
 import type { SpawnOptions, WebContainer, WebContainerProcess } from "@webcontainer/api";
 import type { Terminal } from "@xterm/xterm";
-import { type MaybeRefOrGetter, nextTick, toValue, watchEffect } from "vue";
 
 async function kill(process: Awaitable<WebContainerProcess>) {
   const shellProcess = await process;

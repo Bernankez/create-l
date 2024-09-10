@@ -12,16 +12,16 @@ export interface PackageJsonOptions {
 export interface PromptField {
   message: string;
   name: string;
-  initial: string;
+  initial?: string;
 }
 
-export function fillPackageJson(dest: string, obj: Record<string, any>) {
+export function fillPackageJson(dest: string, obj: Record<string, any>): void {
   const packageJson = readJsonSync(dest);
   const filled = { ...packageJson, ...obj };
   writeFileSync(dest, JSON.stringify(filled, null, 2));
 }
 
-export function fillPackageJsonTemplate(options: Pick<Replacement, "packageName" | "projectName" | "authorEmail" | "authorName" | "description" | "version" | "githubUsername">) {
+export function fillPackageJsonTemplate(options: Pick<Replacement, "packageName" | "projectName" | "authorEmail" | "authorName" | "description" | "version" | "githubUsername">): PackageJson {
   const { projectName, packageName, authorEmail, authorName, description, version, githubUsername } = options;
   const template: PackageJson = {
     name: packageName,
@@ -63,7 +63,7 @@ export function fillPackageJsonTemplate(options: Pick<Replacement, "packageName"
   return template;
 }
 
-export function generatePackageJsonTemplate(options: PackageJsonOptions) {
+export function generatePackageJsonTemplate(options: PackageJsonOptions): { template: PackageJson; fields: PromptField[] } {
   const { projectName, packageName } = options;
   const template: PackageJson = {
     name: "\${packageName}",

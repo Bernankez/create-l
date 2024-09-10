@@ -1,18 +1,18 @@
 import { relative, resolve } from "node:path";
 import process, { cwd, env } from "node:process";
 import { resolvePath } from "@bernankez/utils/node";
-import { emptyDirSync, ensureDirSync } from "fs-extra/esm";
 import chalk from "chalk";
-import { loadArgs } from "./load";
-import { copyAssetSync } from "./utils/io";
-import { replacePlaceholder } from "./template/replacement";
-import { log } from "./utils/log";
+import { emptyDirSync, ensureDirSync } from "fs-extra/esm";
 import { bumpPackages, packageFromUserAgent } from "./bump";
+import { loadArgs } from "./load";
 import { fillPackageJson } from "./template";
+import { replacePlaceholder } from "./template/replacement";
 import { resolvePackage } from "./template/resolve";
 import { sortPackageJson } from "./template/sort";
+import { copyAssetSync } from "./utils/io";
+import { log } from "./utils/log";
 
-async function run() {
+async function run(): Promise<void> {
   log.info(`${chalk.bgBlue(chalk.white(" create-l "))} TypeScript library scaffold`);
   // resolve args
   const args = await loadArgs();

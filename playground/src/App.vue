@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { nextTick, ref, watch } from "vue";
 import { packageJson } from "virtual:playground";
-import type { WebContainer } from "@webcontainer/api";
-import type { Terminal } from "@xterm/xterm";
+import { nextTick, ref, watch } from "vue";
 // @ts-expect-error no type def
 import { common as xtermTheme } from "xterm-style";
+import type { WebContainer } from "@webcontainer/api";
+import type { Terminal } from "@xterm/xterm";
 import Simulator from "./components/Simulator.vue";
 import { useTerminal } from "./composables/useTerminal";
 import { useWebContainer } from "./composables/useWebcontainer";

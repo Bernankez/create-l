@@ -1,14 +1,14 @@
 import { writeFileSync } from "node:fs";
 import { CheckPackages, dumpDependencies } from "taze";
 
-export async function bumpPackages(cwd: string, recursive = false) {
+export async function bumpPackages(cwd: string, recursive = false): Promise<void> {
   const packages = await checkUpdates(cwd, recursive);
   for (const filepath in packages) {
     writeFileSync(filepath, JSON.stringify(packages[filepath], null, 2));
   }
 }
 
-export async function checkUpdates(cwd: string, recursive = false) {
+export async function checkUpdates(cwd: string, recursive = false): Promise<Record<string, string>> {
   // Record<filepath, updated packageJson>
   const packages: Record<string, string> = {};
   const packageInfos = await CheckPackages({
@@ -41,7 +41,7 @@ export async function checkUpdates(cwd: string, recursive = false) {
   return packages;
 }
 
-export function packageFromUserAgent(userAgent?: string) {
+export function packageFromUserAgent(userAgent?: string): { name: string;version: string } | undefined {
   if (!userAgent) {
     return;
   }

@@ -1,10 +1,10 @@
-import { resolve } from "node:path";
 import { readdirSync } from "node:fs";
+import { resolve } from "node:path";
 import { resolvePath } from "@bernankez/utils/node";
 import { bumpPackages } from "../src/bump";
 import { log } from "../src/utils/log";
 
-function run() {
+function run(): void {
   const { __dirname } = resolvePath(import.meta.url);
   const templatesDir = resolve(__dirname, "../templates");
   const files = readdirSync(templatesDir);

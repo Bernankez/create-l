@@ -1,8 +1,8 @@
 import { resolve } from "node:path";
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
 import basicSsl from "@vitejs/plugin-basic-ssl";
+import vue from "@vitejs/plugin-vue";
 import UnoCSS from "unocss/vite";
+import { defineConfig } from "vite";
 import Playground from "./plugins/playground";
 
 // https://vitejs.dev/config/

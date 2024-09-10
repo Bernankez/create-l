@@ -1,6 +1,6 @@
-import type { Awaitable } from "@vueuse/core";
 import { WebContainer } from "@webcontainer/api";
 import { onScopeDispose, ref, shallowRef } from "vue";
+import type { Awaitable } from "@vueuse/core";
 
 const currentWebContainer = shallowRef<WebContainer>();
 

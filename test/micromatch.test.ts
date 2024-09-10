@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import micromatch from "micromatch";
+import { describe, expect, it } from "vitest";
 
 const files = [
   "/user/js/1.js",

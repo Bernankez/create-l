@@ -1,8 +1,8 @@
 import { type MaybeComputedElementRef, useResizeObserver } from "@vueuse/core";
-import type { ITerminalInitOnlyOptions, ITerminalOptions } from "@xterm/xterm";
-import { Terminal } from "@xterm/xterm";
 import { FitAddon } from "@xterm/addon-fit";
+import { Terminal } from "@xterm/xterm";
 import { shallowRef, toValue, watch } from "vue";
+import type { ITerminalInitOnlyOptions, ITerminalOptions } from "@xterm/xterm";
 import "@xterm/xterm/css/xterm.css";
 
 export function useTerminal(terminalElRef: MaybeComputedElementRef<HTMLElement | undefined>, options?: ITerminalOptions & ITerminalInitOnlyOptions) {

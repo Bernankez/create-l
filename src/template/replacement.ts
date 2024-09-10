@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { Replacement } from "../types";
 
@@ -8,7 +8,7 @@ const PACKAGE_NAME = "__packageName__";
 const PACKAGE_MANAGER = "__packageManager__";
 const PACKAGE_MANAGER_ACTION = "__packageManagerAction__";
 
-export function replacePlaceholder(root: string, keys: Replacement) {
+export function replacePlaceholder(root: string, keys: Replacement): void {
   const { projectName, packageName, packageManager, gitBranchName } = keys;
   replaceWords(root, createReplaceFn(new RegExp(PROJECT_NAME, "g"), projectName));
   replaceWords(root, createReplaceFn(new RegExp(PACKAGE_NAME, "g"), packageName));
@@ -38,7 +38,7 @@ export function replacePlaceholder(root: string, keys: Replacement) {
 
 export type ReplaceFn = (file: string) => string;
 
-export function replaceWords(dir: string, fn: ReplaceFn) {
+export function replaceWords(dir: string, fn: ReplaceFn): void {
   if (!existsSync(dir)) {
     return;
   }
@@ -64,6 +64,6 @@ export function replaceWords(dir: string, fn: ReplaceFn) {
   }
 }
 
-export function createReplaceFn(origin: RegExp | string, target: string) {
+export function createReplaceFn(origin: RegExp | string, target: string): ReplaceFn {
   return (file: string) => file.replace(origin, target);
 }

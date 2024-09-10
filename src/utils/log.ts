@@ -5,7 +5,7 @@ export interface LogOption {
   prefix?: string;
 }
 
-function log(str = "", options: LogOption = {}) {
+function log(str = "", options: LogOption = {}): void {
   const { prefix = "" } = options;
   console.log(`${prefix}· ${str}`);
 }

@@ -4,11 +4,11 @@ import process from "node:process";
 // eslint-disable-next-line import/no-named-default
 import { default as Enquirer } from "enquirer";
 import type { RequiredSome } from "@bernankez/utils";
-import { getProjectName, isValidPackageName, toValidPackageName, toValidProjectName } from "../utils/normalize";
+import { fillPackageJsonTemplate, generatePackageJsonTemplate, type PackageJsonOptions, type PromptField } from "../template";
 import { isEmpty } from "../utils/io";
-import type { AdditionalTool, BundleTool } from "../types";
-import { type PackageJsonOptions, fillPackageJsonTemplate, generatePackageJsonTemplate } from "../template";
 import { log } from "../utils/log";
+import { getProjectName, isValidPackageName, toValidPackageName, toValidProjectName } from "../utils/normalize";
+import type { AdditionalTool, BundleTool, PackageJson } from "../types";
 
 const { prompt } = Enquirer;
 
@@ -18,7 +18,7 @@ prompt.on("cancel", () => {
   process.exit(0);
 });
 
-export async function askProjectName() {
+export async function askProjectName(): Promise<{ projectName: string; origin: string }> {
   const { projectName } = await prompt<{ projectName: string }>({
     type: "input",
     message: "Project name",
@@ -31,7 +31,7 @@ export async function askProjectName() {
   };
 }
 
-export async function askOverwrite(origin: string) {
+export async function askOverwrite(origin: string): Promise<{ overwrite: boolean; empty: boolean }> {
   if (existsSync(origin) && !isEmpty(origin)) {
     const { overwrite } = await prompt<{ overwrite: boolean }>({
       message: `${origin === "." ? "Current directory" : `Target directory ${origin}`} is not empty. Remove existing files and continue?`,
@@ -50,7 +50,7 @@ export async function askOverwrite(origin: string) {
   };
 }
 
-export async function askPackageName(projectName?: string) {
+export async function askPackageName(projectName?: string): Promise<string> {
   if (projectName && isValidPackageName(projectName)) {
     return projectName;
   }
@@ -69,7 +69,7 @@ export async function askPackageName(projectName?: string) {
   return packageName;
 }
 
-export async function askBundleTool() {
+export async function askBundleTool(): Promise<BundleTool> {
   const { bundleTool } = await prompt<{ bundleTool: BundleTool }>({
     type: "select",
     message: "Bundle tool",
@@ -84,7 +84,7 @@ export async function askBundleTool() {
   return bundleTool;
 }
 
-export async function askAdditionalTools() {
+export async function askAdditionalTools(): Promise<AdditionalTool[]> {
   const { tools } = await prompt<{ tools: string[] }>({
     type: "multiselect",
     message: "Additional tools",
@@ -103,7 +103,7 @@ export async function askAdditionalTools() {
   });
 }
 
-export async function askGitBranchName() {
+export async function askGitBranchName(): Promise<string> {
   const { gitBranchName } = await prompt<{ gitBranchName: string }>({
     type: "input",
     message: "Git main branch name",
@@ -113,7 +113,7 @@ export async function askGitBranchName() {
   return gitBranchName;
 }
 
-export async function askCustomizePackageJson(options: PackageJsonOptions) {
+export async function askCustomizePackageJson(options: PackageJsonOptions): Promise<{ packageJson: RequiredSome<Record<PromptField["name"], string>, "projectName" | "packageName" | "version">; template: PackageJson } | undefined> {
   const { customize } = await prompt<{ customize: boolean }>({
     type: "confirm",
     message: "Customize package.json?",
@@ -126,11 +126,11 @@ export async function askCustomizePackageJson(options: PackageJsonOptions) {
   return undefined;
 }
 
-export async function askPackageJson(options: PackageJsonOptions) {
+export async function askPackageJson(options: PackageJsonOptions): Promise<{ packageJson: RequiredSome<Record<PromptField["name"], string>, "projectName" | "packageName" | "version">; template: PackageJson }> {
   const { template, fields } = generatePackageJsonTemplate(options);
   const packageJson = (await prompt<{
     packageJson: {
-      values: RequiredSome<Record<typeof fields[number]["name"], string>, "projectName" | "packageName" | "version"> ;
+      values: RequiredSome<Record<PromptField["name"], string>, "projectName" | "packageName" | "version"> ;
       result: string;
     };
   }>({
@@ -148,7 +148,7 @@ export async function askPackageJson(options: PackageJsonOptions) {
   };
 }
 
-export async function askFetchingLatestPackages() {
+export async function askFetchingLatestPackages(): Promise<boolean> {
   const { fetchLatest } = await prompt<{ fetchLatest: boolean }>({
     type: "confirm",
     message: "Fetch latest packages?",

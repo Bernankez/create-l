@@ -1,7 +1,7 @@
 import process from "node:process";
-import type { TemplateFields } from "..";
 import { log } from "../utils/log";
 import { askAdditionalTools, askBundleTool, askCustomizePackageJson, askFetchingLatestPackages, askGitBranchName, askOverwrite, askPackageName, askProjectName } from "./prompts";
+import type { TemplateFields } from "..";
 
 export async function loadPrompts(): Promise<TemplateFields> {
   const { projectName, origin } = await askProjectName();

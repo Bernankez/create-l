@@ -1,11 +1,11 @@
-import process from "node:process";
 import { existsSync } from "node:fs";
+import process from "node:process";
 import { cac } from "cac";
 import { version } from "../package.json";
-import { getProjectName, isValidBundleTool, isValidPackageName, toValidPackageName, toValidProjectName } from "./utils/normalize";
+import { loadPrompts } from "./prompt";
 import { isEmpty } from "./utils/io";
 import { log } from "./utils/log";
-import { loadPrompts } from "./prompt";
+import { getProjectName, isValidBundleTool, isValidPackageName, toValidPackageName, toValidProjectName } from "./utils/normalize";
 import type { BundleTool, TemplateFields } from ".";
 
 export async function loadArgs(argv = process.argv): Promise<TemplateFields> {
